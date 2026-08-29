@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123b63">
+  <title>برنامج البيان المحاسبي</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f2f5f8;
+      color: #222;
+    }
+
+    header {
+      background: #123b63;
+      color: white;
+      padding: 22px 15px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 27px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      opacity: .9;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    }
+
+    h2 {
+      color: #123b63;
+      margin-top: 0;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .add-btn {
+      width: 100%;
+      background: #198754;
+      color: white;
+      margin-top: 15px;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      padding: 7px 10px;
+    }
+
+    .clear-btn {
+      background: #6c757d;
+      color: white;
+      margin-top: 10px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .summary div {
+      padding: 15px 8px;
+      border-radius: 10px;
+      text-align: center;
+      background: #eef3f7;
+    }
+
+    .summary strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 20px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th, td {
+      padding: 11px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #123b63;
+      color: white;
+    }
+
+    .positive {
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .negative {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 25px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+    }
+
+    @media(max-width: 650px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>برنامج البيان المحاسبي</h1>
+  <p>إدارة حسابات الزبائن</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>إضافة حساب جديد</h2>
+
+    <div class="form-grid">
+      <div>
+        <label>اسم الزبون</label>
+        <input id="customer" type="text" placeholder="أدخل اسم الزبون">
+      </div>
+
+      <div>
+        <label>التاريخ</label>
+        <input id="date" type="date">
+      </div>
+
+      <div>
+        <label>المبلغ المستحق له</label>
+        <input id="forCustomer" type="number" min="0" step="any" placeholder="0">
+      </div>
+
+      <div>
+        <label>المبلغ المستحق لنا</label>
+        <input id="forUs" type="number" min="0" step="any" placeholder="0">
+      </div>
+    </div>
+
+    <button class="add-btn" onclick="addAccount()">
+      إضافة الحساب
+    </button>
+  </div>
+
+  <div class="card">
+    <h2>ملخص الحسابات</h2>
+
+    <div class="summary">
+      <div>
+        إجمالي المستحق له
+        <strong id="totalCustomer">0 د.ع</strong>
+      </div>
+
+      <div>
+        إجمالي المستحق لنا
+        <strong id="totalUs">0 د.ع</strong>
+      </div>
+
+      <div>
+        الرصيد النهائي
+        <strong id="balance">0 د.ع</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>سجل الحسابات</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>اسم الزبون</th>
+            <th>التاريخ</th>
+            <th>مستحق له</th>
+            <th>مستحق لنا</th>
+            <th>الرصيد</th>
+            <th>حذف</th>
+          </tr>
+        </thead>
+
+        <tbody id="accountsTable"></tbody>
+      </table>
+    </div>
+
+    <div id="emptyMessage" class="empty">
+      لا توجد حسابات مسجلة حالياً
+    </div>
+
+    <button class="clear-btn" onclick="clearAll()">
+      حذف جميع البيانات
+    </button>
+  </div>
+
+</div>
+
+<footer>
+  برنامج البيان المحاسبي
+</footer>
+
+<script>
+  let accounts = JSON.parse(localStorage.getItem("albayanAccounts")) || [];
+
+  document.getElementById("date").value =
+    new Date().toISOString().split("T")[0];
+
+  function formatMoney(number) {
+    return Number(number).toLocaleString("ar-IQ") + " د.ع";
+  }
+
+  function saveData() {
+    localStorage.setItem("albayanAccounts", JSON.stringify(accounts));
+  }
+
+  function addAccount() {
+    const customer = document.getElementById("customer").value.trim();
+    const date = document.getElementById("date").value;
+    const forCustomer =
+      Number(document.getElementById("forCustomer").value) || 0;
+    const forUs =
+      Number(document.getElementById("forUs").value) || 0;
+
+    if (!customer) {
+      alert("يرجى إدخال اسم الزبون");
+      return;
+    }
+
+    accounts.push({
+      customer,
+      date,
+      forCustomer,
+      forUs
+    });
+
+    saveData();
+    renderAccounts();
+
+    document.getElementById("customer").value = "";
+    document.getElementById("forCustomer").value = "";
+    document.getElementById("forUs").value = "";
+
+    document.getElementById("customer").focus();
+  }
+
+  function deleteAccount(index) {
+    if (confirm("هل تريد حذف هذا الحساب؟")) {
+      accounts.splice(index, 1);
+      saveData();
+      renderAccounts();
+    }
+  }
+
+  function clearAll() {
+    if (accounts.length === 0) return;
+
+    if (confirm("هل أنت متأكد من حذف جميع البيانات؟")) {
+      accounts = [];
+      saveData();
+      renderAccounts();
+    }
+  }
+
+  function renderAccounts() {
+    const table = document.getElementById("accountsTable");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    table.innerHTML = "";
+
+    let totalCustomer = 0;
+    let totalUs = 0;
+
+    accounts.forEach((account, index) => {
+      totalCustomer += account.forCustomer;
+      totalUs += account.forUs;
+
+      const rowBalance = account.forUs - account.forCustomer;
+
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${escapeHtml(account.customer)}</td>
+        <td>${account.date || "-"}</td>
+        <td>${formatMoney(account.forCustomer)}</td>
+        <td>${formatMoney(account.forUs)}</td>
+
+        <td class="${rowBalance >= 0 ? "positive" : "negative"}">
+          ${formatMoney(rowBalance)}
+        </td>
+
+        <td>
+          <button class="delete-btn"
+            onclick="deleteAccount(${index})">
+            حذف
+          </button>
+        </td>
+      `;
+
+      table.appendChild(row);
+    });
+
+    document.getElementById("totalCustomer").textContent =
+      formatMoney(totalCustomer);
+
+    document.getElementById("totalUs").textContent =
+      formatMoney(totalUs);
+
+    const finalBalance = totalUs - totalCustomer;
+
+    const balanceElement = document.getElementById("balance");
+
+    balanceElement.textContent = formatMoney(finalBalance);
+
+    balanceElement.className =
+      finalBalance >= 0 ? "positive" : "negative";
+
+    emptyMessage.style.display =
+      accounts.length ? "none" : "block";
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  renderAccounts();
+</script>
+
+</body>
+</html>
