@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#123b63">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+
   <title>برنامج البيان المحاسبي</title>
 
   <style>
@@ -19,15 +22,16 @@
     }
 
     header {
-      background: #123b63;
+      background: linear-gradient(135deg, #123b63, #1d5c91);
       color: white;
-      padding: 22px 15px;
+      padding: 24px 15px;
       text-align: center;
+      box-shadow: 0 3px 12px rgba(0,0,0,.15);
     }
 
     header h1 {
       margin: 0;
-      font-size: 27px;
+      font-size: 28px;
     }
 
     header p {
@@ -43,7 +47,7 @@
 
     .card {
       background: white;
-      border-radius: 14px;
+      border-radius: 15px;
       padding: 18px;
       margin-bottom: 15px;
       box-shadow: 0 2px 10px rgba(0,0,0,.08);
@@ -52,6 +56,7 @@
     h2 {
       color: #123b63;
       margin-top: 0;
+      font-size: 21px;
     }
 
     .form-grid {
@@ -62,23 +67,31 @@
 
     label {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-weight: bold;
+      color: #333;
     }
 
     input {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      border: 1px solid #ccd3da;
+      border-radius: 9px;
       font-size: 16px;
+      outline: none;
+      background: #fff;
+    }
+
+    input:focus {
+      border-color: #1d5c91;
+      box-shadow: 0 0 0 3px rgba(29,92,145,.10);
     }
 
     button {
       border: none;
-      border-radius: 8px;
-      padding: 12px 18px;
-      font-size: 16px;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-size: 15px;
       cursor: pointer;
       font-weight: bold;
     }
@@ -88,6 +101,19 @@
       background: #198754;
       color: white;
       margin-top: 15px;
+      font-size: 17px;
+    }
+
+    .add-btn.editing {
+      background: #fd7e14;
+    }
+
+    .cancel-edit {
+      width: 100%;
+      margin-top: 8px;
+      background: #6c757d;
+      color: white;
+      display: none;
     }
 
     .delete-btn {
@@ -96,10 +122,11 @@
       padding: 7px 10px;
     }
 
-    .clear-btn {
-      background: #6c757d;
-      color: white;
-      margin-top: 10px;
+    .edit-btn {
+      background: #ffc107;
+      color: #222;
+      padding: 7px 10px;
+      margin-left: 4px;
     }
 
     .summary {
@@ -109,10 +136,11 @@
     }
 
     .summary div {
-      padding: 15px 8px;
-      border-radius: 10px;
+      padding: 16px 8px;
+      border-radius: 11px;
       text-align: center;
       background: #eef3f7;
+      border: 1px solid #e1e7ec;
     }
 
     .summary strong {
@@ -121,14 +149,38 @@
       font-size: 20px;
     }
 
+    .positive {
+      color: #198754 !important;
+      font-weight: bold;
+    }
+
+    .negative {
+      color: #dc3545 !important;
+      font-weight: bold;
+    }
+
+    .neutral {
+      color: #555 !important;
+      font-weight: bold;
+    }
+
+    .search-box {
+      margin-bottom: 14px;
+    }
+
+    .search-box input {
+      background: #fafafa;
+    }
+
     .table-wrap {
       overflow-x: auto;
+      border-radius: 10px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 650px;
+      min-width: 760px;
     }
 
     th, td {
@@ -140,16 +192,11 @@
     th {
       background: #123b63;
       color: white;
+      white-space: nowrap;
     }
 
-    .positive {
-      color: #198754;
-      font-weight: bold;
-    }
-
-    .negative {
-      color: #dc3545;
-      font-weight: bold;
+    tbody tr:hover {
+      background: #f8fafc;
     }
 
     .empty {
@@ -158,10 +205,48 @@
       padding: 25px;
     }
 
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .backup-btn {
+      background: #0d6efd;
+      color: white;
+    }
+
+    .restore-btn {
+      background: #6f42c1;
+      color: white;
+    }
+
+    .export-btn {
+      background: #198754;
+      color: white;
+    }
+
+    .clear-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    #restoreFile {
+      display: none;
+    }
+
     footer {
       text-align: center;
       padding: 20px;
       color: #777;
+      font-size: 14px;
+    }
+
+    .balance-status {
+      font-size: 13px;
+      margin-top: 4px;
+      display: block;
     }
 
     @media(max-width: 650px) {
@@ -171,6 +256,22 @@
 
       .summary {
         grid-template-columns: 1fr;
+      }
+
+      .tools {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      header h1 {
+        font-size: 24px;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      .card {
+        padding: 14px;
       }
     }
   </style>
@@ -186,12 +287,18 @@
 <div class="container">
 
   <div class="card">
-    <h2>إضافة حساب جديد</h2>
+    <h2 id="formTitle">إضافة حساب جديد</h2>
 
     <div class="form-grid">
+
       <div>
         <label>اسم الزبون</label>
-        <input id="customer" type="text" placeholder="أدخل اسم الزبون">
+        <input
+          id="customer"
+          type="text"
+          placeholder="أدخل اسم الزبون"
+          autocomplete="off"
+        >
       </div>
 
       <div>
@@ -201,46 +308,104 @@
 
       <div>
         <label>المبلغ المستحق له</label>
-        <input id="forCustomer" type="number" min="0" step="any" placeholder="0">
+        <input
+          id="forCustomer"
+          type="number"
+          min="0"
+          step="any"
+          inputmode="decimal"
+          placeholder="0"
+        >
       </div>
 
       <div>
         <label>المبلغ المستحق لنا</label>
-        <input id="forUs" type="number" min="0" step="any" placeholder="0">
+        <input
+          id="forUs"
+          type="number"
+          min="0"
+          step="any"
+          inputmode="decimal"
+          placeholder="0"
+        >
       </div>
+
     </div>
 
-    <button class="add-btn" onclick="addAccount()">
+    <button
+      id="saveButton"
+      class="add-btn"
+      onclick="saveAccount()"
+    >
       إضافة الحساب
+    </button>
+
+    <button
+      id="cancelEditButton"
+      class="cancel-edit"
+      onclick="cancelEdit()"
+    >
+      إلغاء التعديل
     </button>
   </div>
 
+
   <div class="card">
+
     <h2>ملخص الحسابات</h2>
 
     <div class="summary">
+
       <div>
         إجمالي المستحق له
-        <strong id="totalCustomer">0 د.ع</strong>
+        <strong id="totalCustomer">
+          0 د.ع
+        </strong>
       </div>
 
       <div>
         إجمالي المستحق لنا
-        <strong id="totalUs">0 د.ع</strong>
+        <strong id="totalUs">
+          0 د.ع
+        </strong>
       </div>
 
       <div>
         الرصيد النهائي
-        <strong id="balance">0 د.ع</strong>
+        <strong id="balance">
+          0 د.ع
+        </strong>
+
+        <span
+          id="balanceStatus"
+          class="balance-status"
+        >
+        </span>
       </div>
+
     </div>
+
   </div>
 
+
   <div class="card">
+
     <h2>سجل الحسابات</h2>
 
+    <div class="search-box">
+      <input
+        id="search"
+        type="search"
+        placeholder="🔎 ابحث عن اسم الزبون..."
+        oninput="renderAccounts()"
+      >
+    </div>
+
+
     <div class="table-wrap">
+
       <table>
+
         <thead>
           <tr>
             <th>#</th>
@@ -249,156 +414,1056 @@
             <th>مستحق له</th>
             <th>مستحق لنا</th>
             <th>الرصيد</th>
-            <th>حذف</th>
+            <th>العمليات</th>
           </tr>
         </thead>
 
         <tbody id="accountsTable"></tbody>
+
       </table>
+
     </div>
 
-    <div id="emptyMessage" class="empty">
+
+    <div
+      id="emptyMessage"
+      class="empty"
+    >
       لا توجد حسابات مسجلة حالياً
     </div>
 
-    <button class="clear-btn" onclick="clearAll()">
-      حذف جميع البيانات
-    </button>
+
+    <div class="tools">
+
+      <button
+        class="backup-btn"
+        onclick="backupData()"
+      >
+        نسخة احتياطية
+      </button>
+
+      <button
+        class="restore-btn"
+        onclick="document.getElementById('restoreFile').click()"
+      >
+        استرجاع البيانات
+      </button>
+
+      <button
+        class="export-btn"
+        onclick="exportCSV()"
+      >
+        تصدير الحسابات
+      </button>
+
+      <button
+        class="clear-btn"
+        onclick="clearAll()"
+      >
+        حذف الجميع
+      </button>
+
+    </div>
+
+    <input
+      type="file"
+      id="restoreFile"
+      accept=".json"
+      onchange="restoreData(event)"
+    >
+
   </div>
 
 </div>
+
 
 <footer>
   برنامج البيان المحاسبي
 </footer>
 
+
 <script>
-  let accounts = JSON.parse(localStorage.getItem("albayanAccounts")) || [];
+
+  let accounts =
+    JSON.parse(
+      localStorage.getItem("albayanAccounts")
+    ) || [];
+
+
+  /*
+    إضافة رقم تعريف للسجلات القديمة
+    بدون حذف البيانات السابقة
+  */
+
+  accounts = accounts.map(account => {
+
+    if (!account.id) {
+      account.id =
+        Date.now().toString() +
+        Math.random().toString(16).slice(2);
+    }
+
+    return account;
+
+  });
+
+
+  let editingId = null;
+
+
+  saveData();
+
+
+  function getToday() {
+
+    const now = new Date();
+
+    const year =
+      now.getFullYear();
+
+    const month =
+      String(now.getMonth() + 1)
+        .padStart(2, "0");
+
+    const day =
+      String(now.getDate())
+        .padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+  }
+
 
   document.getElementById("date").value =
-    new Date().toISOString().split("T")[0];
+    getToday();
+
 
   function formatMoney(number) {
-    return Number(number).toLocaleString("ar-IQ") + " د.ع";
+
+    return Number(number || 0)
+      .toLocaleString("ar-IQ") +
+      " د.ع";
+
   }
+
 
   function saveData() {
-    localStorage.setItem("albayanAccounts", JSON.stringify(accounts));
+
+    localStorage.setItem(
+      "albayanAccounts",
+      JSON.stringify(accounts)
+    );
+
   }
 
-  function addAccount() {
-    const customer = document.getElementById("customer").value.trim();
-    const date = document.getElementById("date").value;
+
+  function saveAccount() {
+
+    const customer =
+      document
+        .getElementById("customer")
+        .value
+        .trim();
+
+    const date =
+      document
+        .getElementById("date")
+        .value;
+
     const forCustomer =
-      Number(document.getElementById("forCustomer").value) || 0;
+      Number(
+        document
+          .getElementById("forCustomer")
+          .value
+      ) || 0;
+
     const forUs =
-      Number(document.getElementById("forUs").value) || 0;
+      Number(
+        document
+          .getElementById("forUs")
+          .value
+      ) || 0;
+
 
     if (!customer) {
-      alert("يرجى إدخال اسم الزبون");
+
+      alert(
+        "يرجى إدخال اسم الزبون"
+      );
+
       return;
+
     }
 
-    accounts.push({
-      customer,
-      date,
-      forCustomer,
-      forUs
-    });
+
+    if (
+      forCustomer < 0 ||
+      forUs < 0
+    ) {
+
+      alert(
+        "لا يمكن إدخال مبلغ سالب"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      forCustomer === 0 &&
+      forUs === 0
+    ) {
+
+      alert(
+        "يرجى إدخال مبلغ للحساب"
+      );
+
+      return;
+
+    }
+
+
+    if (editingId) {
+
+      const account =
+        accounts.find(
+          item =>
+            item.id === editingId
+        );
+
+
+      if (account) {
+
+        account.customer =
+          customer;
+
+        account.date =
+          date;
+
+        account.forCustomer =
+          forCustomer;
+
+        account.forUs =
+          forUs;
+
+      }
+
+
+      editingId = null;
+
+    } else {
+
+      accounts.push({
+
+        id:
+          Date.now().toString() +
+          Math.random()
+            .toString(16)
+            .slice(2),
+
+        customer,
+        date,
+        forCustomer,
+        forUs
+
+      });
+
+    }
+
 
     saveData();
+
     renderAccounts();
 
-    document.getElementById("customer").value = "";
-    document.getElementById("forCustomer").value = "";
-    document.getElementById("forUs").value = "";
+    resetForm();
 
-    document.getElementById("customer").focus();
   }
 
-  function deleteAccount(index) {
-    if (confirm("هل تريد حذف هذا الحساب؟")) {
-      accounts.splice(index, 1);
-      saveData();
-      renderAccounts();
-    }
-  }
 
-  function clearAll() {
-    if (accounts.length === 0) return;
+  function editAccount(id) {
 
-    if (confirm("هل أنت متأكد من حذف جميع البيانات؟")) {
-      accounts = [];
-      saveData();
-      renderAccounts();
-    }
-  }
+    const account =
+      accounts.find(
+        item =>
+          item.id === id
+      );
 
-  function renderAccounts() {
-    const table = document.getElementById("accountsTable");
-    const emptyMessage = document.getElementById("emptyMessage");
 
-    table.innerHTML = "";
+    if (!account) return;
 
-    let totalCustomer = 0;
-    let totalUs = 0;
 
-    accounts.forEach((account, index) => {
-      totalCustomer += account.forCustomer;
-      totalUs += account.forUs;
+    editingId =
+      account.id;
 
-      const rowBalance = account.forUs - account.forCustomer;
 
-      const row = document.createElement("tr");
+    document
+      .getElementById("customer")
+      .value =
+      account.customer;
 
-      row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${escapeHtml(account.customer)}</td>
-        <td>${account.date || "-"}</td>
-        <td>${formatMoney(account.forCustomer)}</td>
-        <td>${formatMoney(account.forUs)}</td>
 
-        <td class="${rowBalance >= 0 ? "positive" : "negative"}">
-          ${formatMoney(rowBalance)}
-        </td>
+    document
+      .getElementById("date")
+      .value =
+      account.date ||
+      getToday();
 
-        <td>
-          <button class="delete-btn"
-            onclick="deleteAccount(${index})">
-            حذف
-          </button>
-        </td>
-      `;
 
-      table.appendChild(row);
+    document
+      .getElementById("forCustomer")
+      .value =
+      account.forCustomer;
+
+
+    document
+      .getElementById("forUs")
+      .value =
+      account.forUs;
+
+
+    document
+      .getElementById("formTitle")
+      .textContent =
+      "تعديل الحساب";
+
+
+    const button =
+      document
+        .getElementById("saveButton");
+
+
+    button.textContent =
+      "حفظ التعديل";
+
+
+    button.classList.add(
+      "editing"
+    );
+
+
+    document
+      .getElementById(
+        "cancelEditButton"
+      )
+      .style.display =
+      "block";
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
     });
 
-    document.getElementById("totalCustomer").textContent =
-      formatMoney(totalCustomer);
+  }
 
-    document.getElementById("totalUs").textContent =
-      formatMoney(totalUs);
 
-    const finalBalance = totalUs - totalCustomer;
+  function cancelEdit() {
 
-    const balanceElement = document.getElementById("balance");
+    editingId = null;
 
-    balanceElement.textContent = formatMoney(finalBalance);
+    resetForm();
 
-    balanceElement.className =
-      finalBalance >= 0 ? "positive" : "negative";
+  }
+
+
+  function resetForm() {
+
+    document
+      .getElementById("customer")
+      .value =
+      "";
+
+
+    document
+      .getElementById("forCustomer")
+      .value =
+      "";
+
+
+    document
+      .getElementById("forUs")
+      .value =
+      "";
+
+
+    document
+      .getElementById("date")
+      .value =
+      getToday();
+
+
+    document
+      .getElementById("formTitle")
+      .textContent =
+      "إضافة حساب جديد";
+
+
+    const button =
+      document
+        .getElementById("saveButton");
+
+
+    button.textContent =
+      "إضافة الحساب";
+
+
+    button.classList.remove(
+      "editing"
+    );
+
+
+    document
+      .getElementById(
+        "cancelEditButton"
+      )
+      .style.display =
+      "none";
+
+
+    document
+      .getElementById("customer")
+      .focus();
+
+  }
+
+
+  function deleteAccount(id) {
+
+    if (
+      confirm(
+        "هل تريد حذف هذا الحساب؟"
+      )
+    ) {
+
+      accounts =
+        accounts.filter(
+          item =>
+            item.id !== id
+        );
+
+
+      if (
+        editingId === id
+      ) {
+
+        editingId = null;
+
+        resetForm();
+
+      }
+
+
+      saveData();
+
+      renderAccounts();
+
+    }
+
+  }
+
+
+  function clearAll() {
+
+    if (
+      accounts.length === 0
+    ) {
+
+      alert(
+        "لا توجد بيانات للحذف"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      confirm(
+        "هل أنت متأكد من حذف جميع البيانات؟"
+      )
+    ) {
+
+      if (
+        confirm(
+          "سيتم حذف جميع الحسابات نهائياً. هل تريد المتابعة؟"
+        )
+      ) {
+
+        accounts = [];
+
+        saveData();
+
+        renderAccounts();
+
+        resetForm();
+
+      }
+
+    }
+
+  }
+
+
+  function renderAccounts() {
+
+    const table =
+      document
+        .getElementById(
+          "accountsTable"
+        );
+
+
+    const emptyMessage =
+      document
+        .getElementById(
+          "emptyMessage"
+        );
+
+
+    const search =
+      document
+        .getElementById("search")
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    table.innerHTML =
+      "";
+
+
+    let totalCustomer = 0;
+
+    let totalUs = 0;
+
+
+    /*
+      الإجماليات لجميع البيانات
+      وليس نتائج البحث فقط
+    */
+
+    accounts.forEach(
+      account => {
+
+        totalCustomer +=
+          Number(
+            account.forCustomer
+          ) || 0;
+
+        totalUs +=
+          Number(
+            account.forUs
+          ) || 0;
+
+      }
+    );
+
+
+    const filtered =
+      accounts.filter(
+        account =>
+
+          String(
+            account.customer
+          )
+          .toLowerCase()
+          .includes(search)
+
+      );
+
+
+    /*
+      الأحدث يظهر أولاً
+    */
+
+    const displayed =
+      [...filtered].reverse();
+
+
+    displayed.forEach(
+      (account, index) => {
+
+        const rowBalance =
+          Number(account.forUs || 0) -
+          Number(account.forCustomer || 0);
+
+
+        let balanceClass =
+          "neutral";
+
+
+        if (
+          rowBalance > 0
+        ) {
+
+          balanceClass =
+            "positive";
+
+        } else if (
+          rowBalance < 0
+        ) {
+
+          balanceClass =
+            "negative";
+
+        }
+
+
+        const row =
+          document.createElement(
+            "tr"
+          );
+
+
+        row.innerHTML = `
+
+          <td>
+            ${index + 1}
+          </td>
+
+          <td>
+            ${escapeHtml(
+              account.customer
+            )}
+          </td>
+
+          <td>
+            ${account.date || "-"}
+          </td>
+
+          <td>
+            ${formatMoney(
+              account.forCustomer
+            )}
+          </td>
+
+          <td>
+            ${formatMoney(
+              account.forUs
+            )}
+          </td>
+
+          <td class="${balanceClass}">
+            ${formatMoney(
+              rowBalance
+            )}
+          </td>
+
+          <td>
+
+            <button
+              class="edit-btn"
+              onclick="editAccount('${account.id}')"
+            >
+              تعديل
+            </button>
+
+            <button
+              class="delete-btn"
+              onclick="deleteAccount('${account.id}')"
+            >
+              حذف
+            </button>
+
+          </td>
+
+        `;
+
+
+        table.appendChild(
+          row
+        );
+
+      }
+    );
+
+
+    document
+      .getElementById(
+        "totalCustomer"
+      )
+      .textContent =
+      formatMoney(
+        totalCustomer
+      );
+
+
+    document
+      .getElementById(
+        "totalUs"
+      )
+      .textContent =
+      formatMoney(
+        totalUs
+      );
+
+
+    const finalBalance =
+      totalUs -
+      totalCustomer;
+
+
+    const balanceElement =
+      document
+        .getElementById(
+          "balance"
+        );
+
+
+    const balanceStatus =
+      document
+        .getElementById(
+          "balanceStatus"
+        );
+
+
+    balanceElement.textContent =
+      formatMoney(
+        Math.abs(finalBalance)
+      );
+
+
+    if (
+      finalBalance > 0
+    ) {
+
+      balanceElement.className =
+        "positive";
+
+      balanceStatus.textContent =
+        "الرصيد لصالحنا";
+
+      balanceStatus.className =
+        "balance-status positive";
+
+    } else if (
+      finalBalance < 0
+    ) {
+
+      balanceElement.className =
+        "negative";
+
+      balanceStatus.textContent =
+        "الرصيد لصالح الزبائن";
+
+      balanceStatus.className =
+        "balance-status negative";
+
+    } else {
+
+      balanceElement.className =
+        "neutral";
+
+      balanceStatus.textContent =
+        "الحساب متعادل";
+
+      balanceStatus.className =
+        "balance-status neutral";
+
+    }
+
 
     emptyMessage.style.display =
-      accounts.length ? "none" : "block";
+      displayed.length
+        ? "none"
+        : "block";
+
   }
+
+
+  function backupData() {
+
+    if (
+      accounts.length === 0
+    ) {
+
+      alert(
+        "لا توجد بيانات لإنشاء نسخة احتياطية"
+      );
+
+      return;
+
+    }
+
+
+    const data =
+      JSON.stringify(
+        accounts,
+        null,
+        2
+      );
+
+
+    const blob =
+      new Blob(
+        [data],
+        {
+          type:
+            "application/json"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+
+    const a =
+      document.createElement(
+        "a"
+      );
+
+
+    a.href =
+      url;
+
+
+    a.download =
+      "albayan-backup-" +
+      getToday() +
+      ".json";
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(
+      url
+    );
+
+  }
+
+
+  function restoreData(event) {
+
+    const file =
+      event.target.files[0];
+
+
+    if (!file) return;
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload =
+      function(e) {
+
+        try {
+
+          const restored =
+            JSON.parse(
+              e.target.result
+            );
+
+
+          if (
+            !Array.isArray(
+              restored
+            )
+          ) {
+
+            throw new Error(
+              "Invalid data"
+            );
+
+          }
+
+
+          if (
+            confirm(
+              "سيتم استبدال البيانات الحالية بالنسخة الاحتياطية. هل تريد المتابعة؟"
+            )
+          ) {
+
+            accounts =
+              restored.map(
+                account => ({
+
+                  ...account,
+
+                  id:
+                    account.id ||
+                    Date.now()
+                      .toString() +
+                    Math.random()
+                      .toString(16)
+                      .slice(2)
+
+                })
+              );
+
+
+            saveData();
+
+            renderAccounts();
+
+            alert(
+              "تم استرجاع البيانات بنجاح"
+            );
+
+          }
+
+        } catch (error) {
+
+          alert(
+            "ملف النسخة الاحتياطية غير صالح"
+          );
+
+        }
+
+
+        event.target.value =
+          "";
+
+      };
+
+
+    reader.readAsText(
+      file
+    );
+
+  }
+
+
+  function exportCSV() {
+
+    if (
+      accounts.length === 0
+    ) {
+
+      alert(
+        "لا توجد حسابات للتصدير"
+      );
+
+      return;
+
+    }
+
+
+    const rows = [
+
+      [
+        "اسم الزبون",
+        "التاريخ",
+        "مستحق له",
+        "مستحق لنا",
+        "الرصيد"
+      ]
+
+    ];
+
+
+    accounts.forEach(
+      account => {
+
+        rows.push([
+
+          account.customer,
+
+          account.date || "",
+
+          account.forCustomer,
+
+          account.forUs,
+
+          Number(
+            account.forUs || 0
+          ) -
+          Number(
+            account.forCustomer || 0
+          )
+
+        ]);
+
+      }
+    );
+
+
+    const csv =
+      "\uFEFF" +
+      rows
+        .map(
+          row =>
+            row
+              .map(
+                value =>
+                  '"' +
+                  String(value)
+                    .replace(
+                      /"/g,
+                      '""'
+                    ) +
+                  '"'
+              )
+              .join(",")
+        )
+        .join("\n");
+
+
+    const blob =
+      new Blob(
+        [csv],
+        {
+          type:
+            "text/csv;charset=utf-8;"
+        }
+      );
+
+
+    const url =
+      URL.createObjectURL(
+        blob
+      );
+
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href =
+      url;
+
+
+    link.download =
+      "حسابات-البيان-" +
+      getToday() +
+      ".csv";
+
+
+    link.click();
+
+
+    URL.revokeObjectURL(
+      url
+    );
+
+  }
+
 
   function escapeHtml(text) {
-    const div = document.createElement("div");
-    div.textContent = text;
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+    div.textContent =
+      text;
+
     return div.innerHTML;
+
   }
 
+
   renderAccounts();
+
 </script>
 
 </body>
