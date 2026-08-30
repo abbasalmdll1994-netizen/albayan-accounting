@@ -4,274 +4,251 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#123b63">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-
   <title>برنامج البيان المحاسبي</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: Tahoma, Arial, sans-serif;
+    *{
+      box-sizing:border-box;
+      font-family:Tahoma,Arial,sans-serif;
     }
 
-    body {
-      margin: 0;
-      background: #f2f5f8;
-      color: #222;
+    body{
+      margin:0;
+      background:#f3f6f9;
+      color:#1f2937;
     }
 
-    header {
-      background: linear-gradient(135deg, #123b63, #1d5c91);
-      color: white;
-      padding: 24px 15px;
-      text-align: center;
-      box-shadow: 0 3px 12px rgba(0,0,0,.15);
+    header{
+      background:linear-gradient(135deg,#123b63,#1f6fa5);
+      color:#fff;
+      padding:18px;
+      text-align:center;
+      position:sticky;
+      top:0;
+      z-index:10;
+      box-shadow:0 2px 8px rgba(0,0,0,.15);
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 28px;
+    header h1{
+      margin:0;
+      font-size:23px;
     }
 
-    header p {
-      margin: 8px 0 0;
-      opacity: .9;
+    header p{
+      margin:6px 0 0;
+      font-size:13px;
+      opacity:.9;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 15px;
+    .container{
+      max-width:1100px;
+      margin:auto;
+      padding:15px;
     }
 
-    .card {
-      background: white;
-      border-radius: 15px;
-      padding: 18px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    .menu{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:10px;
+      margin-bottom:15px;
     }
 
-    h2 {
-      color: #123b63;
-      margin-top: 0;
-      font-size: 21px;
+    .menu button{
+      border:0;
+      background:#fff;
+      padding:14px 6px;
+      border-radius:12px;
+      font-size:14px;
+      font-weight:bold;
+      color:#123b63;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+      cursor:pointer;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+    .menu button.active{
+      background:#123b63;
+      color:#fff;
     }
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-      color: #333;
+    .page{
+      display:none;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccd3da;
-      border-radius: 9px;
-      font-size: 16px;
-      outline: none;
-      background: #fff;
+    .page.active{
+      display:block;
     }
 
-    input:focus {
-      border-color: #1d5c91;
-      box-shadow: 0 0 0 3px rgba(29,92,145,.10);
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
     }
 
-    button {
-      border: none;
-      border-radius: 9px;
-      padding: 11px 15px;
-      font-size: 15px;
-      cursor: pointer;
-      font-weight: bold;
+    .card{
+      background:#fff;
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 2px 10px rgba(0,0,0,.08);
     }
 
-    .add-btn {
-      width: 100%;
-      background: #198754;
-      color: white;
-      margin-top: 15px;
-      font-size: 17px;
+    .card .title{
+      font-size:14px;
+      color:#667085;
     }
 
-    .add-btn.editing {
-      background: #fd7e14;
+    .card .number{
+      margin-top:10px;
+      font-size:25px;
+      font-weight:bold;
+      color:#123b63;
     }
 
-    .cancel-edit {
-      width: 100%;
-      margin-top: 8px;
-      background: #6c757d;
-      color: white;
-      display: none;
+    .green{
+      color:#16864b!important;
     }
 
-    .delete-btn {
-      background: #dc3545;
-      color: white;
-      padding: 7px 10px;
+    .red{
+      color:#c0392b!important;
     }
 
-    .edit-btn {
-      background: #ffc107;
-      color: #222;
-      padding: 7px 10px;
-      margin-left: 4px;
+    .section{
+      background:#fff;
+      border-radius:14px;
+      padding:15px;
+      margin-top:15px;
+      box-shadow:0 2px 10px rgba(0,0,0,.07);
     }
 
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+    .section h2{
+      margin:0 0 15px;
+      color:#123b63;
+      font-size:20px;
     }
 
-    .summary div {
-      padding: 16px 8px;
-      border-radius: 11px;
-      text-align: center;
-      background: #eef3f7;
-      border: 1px solid #e1e7ec;
+    .form-grid{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr auto;
+      gap:8px;
     }
 
-    .summary strong {
-      display: block;
-      margin-top: 7px;
-      font-size: 20px;
+    input,select{
+      width:100%;
+      padding:12px;
+      border:1px solid #d0d5dd;
+      border-radius:9px;
+      font-size:15px;
+      outline:none;
+      background:#fff;
     }
 
-    .positive {
-      color: #198754 !important;
-      font-weight: bold;
+    input:focus,select:focus{
+      border-color:#1f6fa5;
     }
 
-    .negative {
-      color: #dc3545 !important;
-      font-weight: bold;
+    .btn{
+      border:0;
+      border-radius:9px;
+      padding:12px 18px;
+      background:#123b63;
+      color:white;
+      font-size:15px;
+      font-weight:bold;
+      cursor:pointer;
     }
 
-    .neutral {
-      color: #555 !important;
-      font-weight: bold;
+    .btn-green{
+      background:#16864b;
     }
 
-    .search-box {
-      margin-bottom: 14px;
+    .btn-red{
+      background:#c0392b;
     }
 
-    .search-box input {
-      background: #fafafa;
+    .btn-gray{
+      background:#667085;
     }
 
-    .table-wrap {
-      overflow-x: auto;
-      border-radius: 10px;
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:15px;
+      min-width:650px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 760px;
+    th{
+      background:#123b63;
+      color:#fff;
+      padding:12px 8px;
+      font-size:14px;
     }
 
-    th, td {
-      padding: 11px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
+    td{
+      border-bottom:1px solid #e5e7eb;
+      padding:11px 8px;
+      text-align:center;
+      font-size:14px;
     }
 
-    th {
-      background: #123b63;
-      color: white;
-      white-space: nowrap;
+    tr:hover td{
+      background:#f8fafc;
     }
 
-    tbody tr:hover {
-      background: #f8fafc;
+    .table-wrap{
+      overflow-x:auto;
     }
 
-    .empty {
-      text-align: center;
-      color: #777;
-      padding: 25px;
+    .balance-positive{
+      color:#c0392b;
+      font-weight:bold;
     }
 
-    .tools {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 14px;
+    .balance-negative{
+      color:#16864b;
+      font-weight:bold;
     }
 
-    .backup-btn {
-      background: #0d6efd;
-      color: white;
+    .empty{
+      text-align:center;
+      padding:30px;
+      color:#667085;
     }
 
-    .restore-btn {
-      background: #6f42c1;
-      color: white;
+    .small-btn{
+      border:0;
+      border-radius:7px;
+      padding:7px 10px;
+      color:#fff;
+      cursor:pointer;
+      margin:2px;
+      font-size:12px;
     }
 
-    .export-btn {
-      background: #198754;
-      color: white;
+    .search{
+      margin-bottom:10px;
     }
 
-    .clear-btn {
-      background: #dc3545;
-      color: white;
+    .footer{
+      text-align:center;
+      color:#667085;
+      font-size:12px;
+      padding:25px 5px;
     }
 
-    #restoreFile {
-      display: none;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #777;
-      font-size: 14px;
-    }
-
-    .balance-status {
-      font-size: 13px;
-      margin-top: 4px;
-      display: block;
-    }
-
-    @media(max-width: 650px) {
-      .form-grid {
-        grid-template-columns: 1fr;
+    @media(max-width:700px){
+      .menu{
+        grid-template-columns:repeat(2,1fr);
       }
 
-      .summary {
-        grid-template-columns: 1fr;
+      .cards{
+        grid-template-columns:1fr;
       }
 
-      .tools {
-        grid-template-columns: 1fr 1fr;
+      .form-grid{
+        grid-template-columns:1fr;
       }
 
-      header h1 {
-        font-size: 24px;
-      }
-
-      .container {
-        padding: 10px;
-      }
-
-      .card {
-        padding: 14px;
+      header h1{
+        font-size:20px;
       }
     }
   </style>
@@ -281,1188 +258,613 @@
 
 <header>
   <h1>برنامج البيان المحاسبي</h1>
-  <p>إدارة حسابات الزبائن</p>
+  <p>نظام مبسط لإدارة الحسابات والزبائن</p>
 </header>
 
 <div class="container">
 
-  <div class="card">
-    <h2 id="formTitle">إضافة حساب جديد</h2>
-
-    <div class="form-grid">
-
-      <div>
-        <label>اسم الزبون</label>
-        <input
-          id="customer"
-          type="text"
-          placeholder="أدخل اسم الزبون"
-          autocomplete="off"
-        >
-      </div>
-
-      <div>
-        <label>التاريخ</label>
-        <input id="date" type="date">
-      </div>
-
-      <div>
-        <label>المبلغ المستحق له</label>
-        <input
-          id="forCustomer"
-          type="number"
-          min="0"
-          step="any"
-          inputmode="decimal"
-          placeholder="0"
-        >
-      </div>
-
-      <div>
-        <label>المبلغ المستحق لنا</label>
-        <input
-          id="forUs"
-          type="number"
-          min="0"
-          step="any"
-          inputmode="decimal"
-          placeholder="0"
-        >
-      </div>
-
-    </div>
-
-    <button
-      id="saveButton"
-      class="add-btn"
-      onclick="saveAccount()"
-    >
-      إضافة الحساب
-    </button>
-
-    <button
-      id="cancelEditButton"
-      class="cancel-edit"
-      onclick="cancelEdit()"
-    >
-      إلغاء التعديل
-    </button>
+  <div class="menu">
+    <button class="active" onclick="showPage('home',this)">🏠 الرئيسية</button>
+    <button onclick="showPage('customers',this)">👥 الزبائن</button>
+    <button onclick="showPage('transactions',this)">💰 الحركات</button>
+    <button onclick="showPage('reports',this)">📊 التقارير</button>
   </div>
 
+  <!-- الرئيسية -->
+  <div id="home" class="page active">
 
-  <div class="card">
+    <div class="cards">
 
-    <h2>ملخص الحسابات</h2>
-
-    <div class="summary">
-
-      <div>
-        إجمالي المستحق له
-        <strong id="totalCustomer">
-          0 د.ع
-        </strong>
+      <div class="card">
+        <div class="title">عدد الزبائن</div>
+        <div class="number" id="customerCount">0</div>
       </div>
 
-      <div>
-        إجمالي المستحق لنا
-        <strong id="totalUs">
-          0 د.ع
-        </strong>
+      <div class="card">
+        <div class="title">لنا على الزبائن</div>
+        <div class="number green" id="totalForUs">0 د.ع</div>
       </div>
 
-      <div>
-        الرصيد النهائي
-        <strong id="balance">
-          0 د.ع
-        </strong>
-
-        <span
-          id="balanceStatus"
-          class="balance-status"
-        >
-        </span>
+      <div class="card">
+        <div class="title">للزبائن علينا</div>
+        <div class="number red" id="totalForThem">0 د.ع</div>
       </div>
 
     </div>
 
-  </div>
-
-
-  <div class="card">
-
-    <h2>سجل الحسابات</h2>
-
-    <div class="search-box">
-      <input
-        id="search"
-        type="search"
-        placeholder="🔎 ابحث عن اسم الزبون..."
-        oninput="renderAccounts()"
-      >
-    </div>
-
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
+    <div class="section">
+      <h2>آخر الحركات</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
           <tr>
-            <th>#</th>
-            <th>اسم الزبون</th>
             <th>التاريخ</th>
-            <th>مستحق له</th>
-            <th>مستحق لنا</th>
-            <th>الرصيد</th>
-            <th>العمليات</th>
+            <th>الزبون</th>
+            <th>البيان</th>
+            <th>له</th>
+            <th>لنا</th>
           </tr>
-        </thead>
-
-        <tbody id="accountsTable"></tbody>
-
-      </table>
-
+          </thead>
+          <tbody id="recentTransactions"></tbody>
+        </table>
+      </div>
     </div>
 
+  </div>
 
-    <div
-      id="emptyMessage"
-      class="empty"
-    >
-      لا توجد حسابات مسجلة حالياً
+  <!-- الزبائن -->
+  <div id="customers" class="page">
+
+    <div class="section">
+      <h2>إضافة زبون جديد</h2>
+
+      <div class="form-grid">
+        <input id="customerName" type="text" placeholder="اسم الزبون">
+
+        <input id="customerPhone" type="text" placeholder="رقم الهاتف">
+
+        <input id="openingBalance" type="number" placeholder="الرصيد الافتتاحي">
+
+        <button class="btn btn-green" onclick="addCustomer()">إضافة</button>
+      </div>
     </div>
 
+    <div class="section">
+      <h2>قائمة الزبائن</h2>
 
-    <div class="tools">
-
-      <button
-        class="backup-btn"
-        onclick="backupData()"
+      <input
+        class="search"
+        id="customerSearch"
+        type="text"
+        placeholder="🔍 ابحث عن زبون..."
+        oninput="renderCustomers()"
       >
-        نسخة احتياطية
-      </button>
 
-      <button
-        class="restore-btn"
-        onclick="document.getElementById('restoreFile').click()"
-      >
-        استرجاع البيانات
-      </button>
+      <div class="table-wrap">
+        <table>
+          <thead>
+          <tr>
+            <th>الزبون</th>
+            <th>الهاتف</th>
+            <th>له</th>
+            <th>لنا</th>
+            <th>الرصيد</th>
+            <th>إجراء</th>
+          </tr>
+          </thead>
 
-      <button
-        class="export-btn"
-        onclick="exportCSV()"
-      >
-        تصدير الحسابات
-      </button>
-
-      <button
-        class="clear-btn"
-        onclick="clearAll()"
-      >
-        حذف الجميع
-      </button>
-
+          <tbody id="customersTable"></tbody>
+        </table>
+      </div>
     </div>
 
-    <input
-      type="file"
-      id="restoreFile"
-      accept=".json"
-      onchange="restoreData(event)"
-    >
+  </div>
+
+  <!-- الحركات -->
+  <div id="transactions" class="page">
+
+    <div class="section">
+      <h2>إضافة حركة حساب</h2>
+
+      <div class="form-grid">
+
+        <select id="transactionCustomer">
+          <option value="">اختر الزبون</option>
+        </select>
+
+        <input id="transactionDescription" type="text" placeholder="البيان / الملاحظة">
+
+        <select id="transactionType">
+          <option value="us">لنا عليه</option>
+          <option value="them">له علينا</option>
+        </select>
+
+        <input id="transactionAmount" type="number" placeholder="المبلغ">
+
+      </div>
+
+      <button
+        class="btn btn-green"
+        style="margin-top:10px;width:100%"
+        onclick="addTransaction()"
+      >
+        حفظ الحركة
+      </button>
+    </div>
+
+    <div class="section">
+      <h2>سجل الحركات</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+          <tr>
+            <th>التاريخ</th>
+            <th>الزبون</th>
+            <th>البيان</th>
+            <th>له</th>
+            <th>لنا</th>
+            <th>إجراء</th>
+          </tr>
+          </thead>
+
+          <tbody id="transactionsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- التقارير -->
+  <div id="reports" class="page">
+
+    <div class="section">
+      <h2>ملخص الحسابات</h2>
+
+      <div class="cards">
+
+        <div class="card">
+          <div class="title">إجمالي لنا</div>
+          <div class="number green" id="reportForUs">0 د.ع</div>
+        </div>
+
+        <div class="card">
+          <div class="title">إجمالي لهم</div>
+          <div class="number red" id="reportForThem">0 د.ع</div>
+        </div>
+
+        <div class="card">
+          <div class="title">صافي الحساب</div>
+          <div class="number" id="netBalance">0 د.ع</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>النسخ الاحتياطي</h2>
+
+      <button class="btn" onclick="exportData()">تنزيل نسخة احتياطية</button>
+
+      <label class="btn btn-gray" style="display:inline-block;cursor:pointer">
+        استيراد نسخة
+        <input
+          type="file"
+          accept=".json"
+          onchange="importData(event)"
+          style="display:none"
+        >
+      </label>
+    </div>
 
   </div>
 
 </div>
 
-
-<footer>
-  برنامج البيان المحاسبي
-</footer>
-
+<div class="footer">
+  برنامج البيان المحاسبي © 2026
+</div>
 
 <script>
 
-  let accounts =
-    JSON.parse(
-      localStorage.getItem("albayanAccounts")
-    ) || [];
+let customers = JSON.parse(localStorage.getItem("albayan_customers")) || [];
+let transactions = JSON.parse(localStorage.getItem("albayan_transactions")) || [];
 
+function saveData(){
+  localStorage.setItem("albayan_customers", JSON.stringify(customers));
+  localStorage.setItem("albayan_transactions", JSON.stringify(transactions));
+}
 
-  /*
-    إضافة رقم تعريف للسجلات القديمة
-    بدون حذف البيانات السابقة
-  */
+function money(value){
+  return Number(value || 0).toLocaleString("en-US") + " د.ع";
+}
 
-  accounts = accounts.map(account => {
+function showPage(id,button){
 
-    if (!account.id) {
-      account.id =
-        Date.now().toString() +
-        Math.random().toString(16).slice(2);
-    }
-
-    return account;
-
+  document.querySelectorAll(".page").forEach(page=>{
+    page.classList.remove("active");
   });
 
+  document.getElementById(id).classList.add("active");
 
-  let editingId = null;
+  document.querySelectorAll(".menu button").forEach(btn=>{
+    btn.classList.remove("active");
+  });
 
+  if(button){
+    button.classList.add("active");
+  }
+
+  refresh();
+}
+
+function addCustomer(){
+
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const opening = Number(document.getElementById("openingBalance").value || 0);
+
+  if(!name){
+    alert("يرجى كتابة اسم الزبون");
+    return;
+  }
+
+  const customer = {
+    id:Date.now(),
+    name:name,
+    phone:phone
+  };
+
+  customers.push(customer);
+
+  if(opening > 0){
+    transactions.push({
+      id:Date.now()+1,
+      customerId:customer.id,
+      description:"رصيد افتتاحي",
+      type:"us",
+      amount:opening,
+      date:new Date().toLocaleDateString("ar-IQ")
+    });
+  }
 
   saveData();
 
+  document.getElementById("customerName").value="";
+  document.getElementById("customerPhone").value="";
+  document.getElementById("openingBalance").value="";
 
-  function getToday() {
+  refresh();
 
-    const now = new Date();
+  alert("تمت إضافة الزبون بنجاح");
+}
 
-    const year =
-      now.getFullYear();
+function addTransaction(){
 
-    const month =
-      String(now.getMonth() + 1)
-        .padStart(2, "0");
+  const customerId = Number(document.getElementById("transactionCustomer").value);
+  const description = document.getElementById("transactionDescription").value.trim();
+  const type = document.getElementById("transactionType").value;
+  const amount = Number(document.getElementById("transactionAmount").value);
 
-    const day =
-      String(now.getDate())
-        .padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-
+  if(!customerId){
+    alert("اختر الزبون");
+    return;
   }
 
-
-  document.getElementById("date").value =
-    getToday();
-
-
-  function formatMoney(number) {
-
-    return Number(number || 0)
-      .toLocaleString("ar-IQ") +
-      " د.ع";
-
+  if(!amount || amount <= 0){
+    alert("أدخل مبلغ صحيح");
+    return;
   }
 
+  transactions.unshift({
+    id:Date.now(),
+    customerId:customerId,
+    description:description || "حركة حساب",
+    type:type,
+    amount:amount,
+    date:new Date().toLocaleDateString("ar-IQ")
+  });
 
-  function saveData() {
+  saveData();
 
-    localStorage.setItem(
-      "albayanAccounts",
-      JSON.stringify(accounts)
-    );
+  document.getElementById("transactionDescription").value="";
+  document.getElementById("transactionAmount").value="";
 
+  refresh();
+
+  alert("تم حفظ الحركة");
+}
+
+function deleteCustomer(id){
+
+  if(!confirm("هل تريد حذف الزبون وجميع حركاته؟")){
+    return;
   }
 
+  customers = customers.filter(c=>c.id !== id);
+  transactions = transactions.filter(t=>t.customerId !== id);
 
-  function saveAccount() {
+  saveData();
+  refresh();
+}
 
-    const customer =
-      document
-        .getElementById("customer")
-        .value
-        .trim();
+function deleteTransaction(id){
 
-    const date =
-      document
-        .getElementById("date")
-        .value;
+  if(!confirm("هل تريد حذف هذه الحركة؟")){
+    return;
+  }
 
-    const forCustomer =
-      Number(
-        document
-          .getElementById("forCustomer")
-          .value
-      ) || 0;
+  transactions = transactions.filter(t=>t.id !== id);
 
-    const forUs =
-      Number(
-        document
-          .getElementById("forUs")
-          .value
-      ) || 0;
+  saveData();
+  refresh();
+}
 
+function customerTotals(customerId){
 
-    if (!customer) {
+  let us = 0;
+  let them = 0;
 
-      alert(
-        "يرجى إدخال اسم الزبون"
-      );
+  transactions
+    .filter(t=>t.customerId === customerId)
+    .forEach(t=>{
 
-      return;
-
-    }
-
-
-    if (
-      forCustomer < 0 ||
-      forUs < 0
-    ) {
-
-      alert(
-        "لا يمكن إدخال مبلغ سالب"
-      );
-
-      return;
-
-    }
-
-
-    if (
-      forCustomer === 0 &&
-      forUs === 0
-    ) {
-
-      alert(
-        "يرجى إدخال مبلغ للحساب"
-      );
-
-      return;
-
-    }
-
-
-    if (editingId) {
-
-      const account =
-        accounts.find(
-          item =>
-            item.id === editingId
-        );
-
-
-      if (account) {
-
-        account.customer =
-          customer;
-
-        account.date =
-          date;
-
-        account.forCustomer =
-          forCustomer;
-
-        account.forUs =
-          forUs;
-
+      if(t.type === "us"){
+        us += Number(t.amount);
+      }else{
+        them += Number(t.amount);
       }
 
-
-      editingId = null;
-
-    } else {
-
-      accounts.push({
-
-        id:
-          Date.now().toString() +
-          Math.random()
-            .toString(16)
-            .slice(2),
-
-        customer,
-        date,
-        forCustomer,
-        forUs
-
-      });
-
-    }
-
-
-    saveData();
-
-    renderAccounts();
-
-    resetForm();
-
-  }
-
-
-  function editAccount(id) {
-
-    const account =
-      accounts.find(
-        item =>
-          item.id === id
-      );
-
-
-    if (!account) return;
-
-
-    editingId =
-      account.id;
-
-
-    document
-      .getElementById("customer")
-      .value =
-      account.customer;
-
-
-    document
-      .getElementById("date")
-      .value =
-      account.date ||
-      getToday();
-
-
-    document
-      .getElementById("forCustomer")
-      .value =
-      account.forCustomer;
-
-
-    document
-      .getElementById("forUs")
-      .value =
-      account.forUs;
-
-
-    document
-      .getElementById("formTitle")
-      .textContent =
-      "تعديل الحساب";
-
-
-    const button =
-      document
-        .getElementById("saveButton");
-
-
-    button.textContent =
-      "حفظ التعديل";
-
-
-    button.classList.add(
-      "editing"
-    );
-
-
-    document
-      .getElementById(
-        "cancelEditButton"
-      )
-      .style.display =
-      "block";
-
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
     });
 
+  return {
+    us,
+    them,
+    balance:us-them
+  };
+}
+
+function renderCustomers(){
+
+  const tbody = document.getElementById("customersTable");
+  const search = document.getElementById("customerSearch").value.toLowerCase();
+
+  tbody.innerHTML="";
+
+  const filtered = customers.filter(c=>
+    c.name.toLowerCase().includes(search) ||
+    (c.phone || "").includes(search)
+  );
+
+  if(filtered.length === 0){
+
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="6" class="empty">لا يوجد زبائن</td>
+      </tr>
+    `;
+
+    return;
   }
 
+  filtered.forEach(customer=>{
 
-  function cancelEdit() {
+    const totals = customerTotals(customer.id);
 
-    editingId = null;
+    const balanceClass =
+      totals.balance >= 0
+      ? "balance-positive"
+      : "balance-negative";
 
-    resetForm();
+    tbody.innerHTML += `
+      <tr>
+        <td>${customer.name}</td>
+        <td>${customer.phone || "-"}</td>
+        <td>${money(totals.them)}</td>
+        <td>${money(totals.us)}</td>
+        <td class="${balanceClass}">
+          ${money(Math.abs(totals.balance))}
+          ${totals.balance > 0 ? " لنا" : totals.balance < 0 ? " له" : ""}
+        </td>
+        <td>
+          <button
+            class="small-btn btn-red"
+            onclick="deleteCustomer(${customer.id})"
+          >
+            حذف
+          </button>
+        </td>
+      </tr>
+    `;
 
+  });
+}
+
+function renderCustomerSelect(){
+
+  const select = document.getElementById("transactionCustomer");
+
+  const oldValue = select.value;
+
+  select.innerHTML='<option value="">اختر الزبون</option>';
+
+  customers.forEach(c=>{
+    select.innerHTML += `
+      <option value="${c.id}">
+        ${c.name}
+      </option>
+    `;
+  });
+
+  select.value=oldValue;
+}
+
+function renderTransactions(){
+
+  const tbody = document.getElementById("transactionsTable");
+
+  tbody.innerHTML="";
+
+  if(transactions.length === 0){
+
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="6" class="empty">لا توجد حركات</td>
+      </tr>
+    `;
+
+    return;
   }
 
+  transactions.forEach(t=>{
 
-  function resetForm() {
+    const customer = customers.find(c=>c.id === t.customerId);
 
-    document
-      .getElementById("customer")
-      .value =
-      "";
+    tbody.innerHTML += `
+      <tr>
+        <td>${t.date}</td>
+        <td>${customer ? customer.name : "-"}</td>
+        <td>${t.description}</td>
+        <td>${t.type === "them" ? money(t.amount) : "-"}</td>
+        <td>${t.type === "us" ? money(t.amount) : "-"}</td>
+        <td>
+          <button
+            class="small-btn btn-red"
+            onclick="deleteTransaction(${t.id})"
+          >
+            حذف
+          </button>
+        </td>
+      </tr>
+    `;
 
+  });
+}
 
-    document
-      .getElementById("forCustomer")
-      .value =
-      "";
+function dashboard(){
 
+  let totalUs = 0;
+  let totalThem = 0;
 
-    document
-      .getElementById("forUs")
-      .value =
-      "";
+  transactions.forEach(t=>{
 
+    if(t.type === "us"){
+      totalUs += Number(t.amount);
+    }else{
+      totalThem += Number(t.amount);
+    }
 
-    document
-      .getElementById("date")
-      .value =
-      getToday();
+  });
 
+  document.getElementById("customerCount").textContent=customers.length;
+  document.getElementById("totalForUs").textContent=money(totalUs);
+  document.getElementById("totalForThem").textContent=money(totalThem);
 
-    document
-      .getElementById("formTitle")
-      .textContent =
-      "إضافة حساب جديد";
+  document.getElementById("reportForUs").textContent=money(totalUs);
+  document.getElementById("reportForThem").textContent=money(totalThem);
 
+  const net = totalUs-totalThem;
 
-    const button =
-      document
-        .getElementById("saveButton");
+  document.getElementById("netBalance").textContent=
+    money(Math.abs(net)) +
+    (net > 0 ? " لنا" : net < 0 ? " علينا" : "");
 
+  const recent = document.getElementById("recentTransactions");
 
-    button.textContent =
-      "إضافة الحساب";
+  recent.innerHTML="";
 
+  transactions.slice(0,5).forEach(t=>{
 
-    button.classList.remove(
-      "editing"
-    );
+    const customer=customers.find(c=>c.id===t.customerId);
 
+    recent.innerHTML += `
+      <tr>
+        <td>${t.date}</td>
+        <td>${customer ? customer.name : "-"}</td>
+        <td>${t.description}</td>
+        <td>${t.type==="them" ? money(t.amount) : "-"}</td>
+        <td>${t.type==="us" ? money(t.amount) : "-"}</td>
+      </tr>
+    `;
 
-    document
-      .getElementById(
-        "cancelEditButton"
-      )
-      .style.display =
-      "none";
+  });
 
+  if(transactions.length === 0){
+    recent.innerHTML=`
+      <tr>
+        <td colspan="5" class="empty">لا توجد حركات حتى الآن</td>
+      </tr>
+    `;
+  }
+}
 
-    document
-      .getElementById("customer")
-      .focus();
+function exportData(){
 
+  const data={
+    customers,
+    transactions,
+    exportDate:new Date().toISOString()
+  };
+
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="albayan-backup.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function importData(event){
+
+  const file=event.target.files[0];
+
+  if(!file){
+    return;
   }
 
+  const reader=new FileReader();
 
-  function deleteAccount(id) {
+  reader.onload=function(e){
 
-    if (
-      confirm(
-        "هل تريد حذف هذا الحساب؟"
-      )
-    ) {
+    try{
 
-      accounts =
-        accounts.filter(
-          item =>
-            item.id !== id
-        );
+      const data=JSON.parse(e.target.result);
 
-
-      if (
-        editingId === id
-      ) {
-
-        editingId = null;
-
-        resetForm();
-
-      }
-
+      customers=data.customers || [];
+      transactions=data.transactions || [];
 
       saveData();
+      refresh();
 
-      renderAccounts();
+      alert("تم استيراد النسخة الاحتياطية بنجاح");
 
-    }
+    }catch(error){
 
-  }
-
-
-  function clearAll() {
-
-    if (
-      accounts.length === 0
-    ) {
-
-      alert(
-        "لا توجد بيانات للحذف"
-      );
-
-      return;
+      alert("ملف النسخة الاحتياطية غير صالح");
 
     }
 
-
-    if (
-      confirm(
-        "هل أنت متأكد من حذف جميع البيانات؟"
-      )
-    ) {
-
-      if (
-        confirm(
-          "سيتم حذف جميع الحسابات نهائياً. هل تريد المتابعة؟"
-        )
-      ) {
-
-        accounts = [];
-
-        saveData();
-
-        renderAccounts();
-
-        resetForm();
-
-      }
-
-    }
-
-  }
-
-
-  function renderAccounts() {
-
-    const table =
-      document
-        .getElementById(
-          "accountsTable"
-        );
-
-
-    const emptyMessage =
-      document
-        .getElementById(
-          "emptyMessage"
-        );
-
-
-    const search =
-      document
-        .getElementById("search")
-        .value
-        .trim()
-        .toLowerCase();
-
-
-    table.innerHTML =
-      "";
-
-
-    let totalCustomer = 0;
-
-    let totalUs = 0;
-
-
-    /*
-      الإجماليات لجميع البيانات
-      وليس نتائج البحث فقط
-    */
-
-    accounts.forEach(
-      account => {
-
-        totalCustomer +=
-          Number(
-            account.forCustomer
-          ) || 0;
-
-        totalUs +=
-          Number(
-            account.forUs
-          ) || 0;
-
-      }
-    );
-
-
-    const filtered =
-      accounts.filter(
-        account =>
-
-          String(
-            account.customer
-          )
-          .toLowerCase()
-          .includes(search)
-
-      );
-
-
-    /*
-      الأحدث يظهر أولاً
-    */
-
-    const displayed =
-      [...filtered].reverse();
-
-
-    displayed.forEach(
-      (account, index) => {
-
-        const rowBalance =
-          Number(account.forUs || 0) -
-          Number(account.forCustomer || 0);
-
-
-        let balanceClass =
-          "neutral";
-
-
-        if (
-          rowBalance > 0
-        ) {
-
-          balanceClass =
-            "positive";
-
-        } else if (
-          rowBalance < 0
-        ) {
-
-          balanceClass =
-            "negative";
-
-        }
-
-
-        const row =
-          document.createElement(
-            "tr"
-          );
-
-
-        row.innerHTML = `
-
-          <td>
-            ${index + 1}
-          </td>
-
-          <td>
-            ${escapeHtml(
-              account.customer
-            )}
-          </td>
-
-          <td>
-            ${account.date || "-"}
-          </td>
-
-          <td>
-            ${formatMoney(
-              account.forCustomer
-            )}
-          </td>
-
-          <td>
-            ${formatMoney(
-              account.forUs
-            )}
-          </td>
-
-          <td class="${balanceClass}">
-            ${formatMoney(
-              rowBalance
-            )}
-          </td>
-
-          <td>
-
-            <button
-              class="edit-btn"
-              onclick="editAccount('${account.id}')"
-            >
-              تعديل
-            </button>
-
-            <button
-              class="delete-btn"
-              onclick="deleteAccount('${account.id}')"
-            >
-              حذف
-            </button>
-
-          </td>
-
-        `;
-
-
-        table.appendChild(
-          row
-        );
-
-      }
-    );
-
-
-    document
-      .getElementById(
-        "totalCustomer"
-      )
-      .textContent =
-      formatMoney(
-        totalCustomer
-      );
-
-
-    document
-      .getElementById(
-        "totalUs"
-      )
-      .textContent =
-      formatMoney(
-        totalUs
-      );
-
-
-    const finalBalance =
-      totalUs -
-      totalCustomer;
-
-
-    const balanceElement =
-      document
-        .getElementById(
-          "balance"
-        );
-
-
-    const balanceStatus =
-      document
-        .getElementById(
-          "balanceStatus"
-        );
-
-
-    balanceElement.textContent =
-      formatMoney(
-        Math.abs(finalBalance)
-      );
-
-
-    if (
-      finalBalance > 0
-    ) {
-
-      balanceElement.className =
-        "positive";
-
-      balanceStatus.textContent =
-        "الرصيد لصالحنا";
-
-      balanceStatus.className =
-        "balance-status positive";
-
-    } else if (
-      finalBalance < 0
-    ) {
-
-      balanceElement.className =
-        "negative";
-
-      balanceStatus.textContent =
-        "الرصيد لصالح الزبائن";
-
-      balanceStatus.className =
-        "balance-status negative";
-
-    } else {
-
-      balanceElement.className =
-        "neutral";
-
-      balanceStatus.textContent =
-        "الحساب متعادل";
-
-      balanceStatus.className =
-        "balance-status neutral";
-
-    }
-
-
-    emptyMessage.style.display =
-      displayed.length
-        ? "none"
-        : "block";
-
-  }
-
-
-  function backupData() {
-
-    if (
-      accounts.length === 0
-    ) {
-
-      alert(
-        "لا توجد بيانات لإنشاء نسخة احتياطية"
-      );
-
-      return;
-
-    }
-
-
-    const data =
-      JSON.stringify(
-        accounts,
-        null,
-        2
-      );
-
-
-    const blob =
-      new Blob(
-        [data],
-        {
-          type:
-            "application/json"
-        }
-      );
-
-
-    const url =
-      URL.createObjectURL(
-        blob
-      );
-
-
-    const a =
-      document.createElement(
-        "a"
-      );
-
-
-    a.href =
-      url;
-
-
-    a.download =
-      "albayan-backup-" +
-      getToday() +
-      ".json";
-
-
-    a.click();
-
-
-    URL.revokeObjectURL(
-      url
-    );
-
-  }
-
-
-  function restoreData(event) {
-
-    const file =
-      event.target.files[0];
-
-
-    if (!file) return;
-
-
-    const reader =
-      new FileReader();
-
-
-    reader.onload =
-      function(e) {
-
-        try {
-
-          const restored =
-            JSON.parse(
-              e.target.result
-            );
-
-
-          if (
-            !Array.isArray(
-              restored
-            )
-          ) {
-
-            throw new Error(
-              "Invalid data"
-            );
-
-          }
-
-
-          if (
-            confirm(
-              "سيتم استبدال البيانات الحالية بالنسخة الاحتياطية. هل تريد المتابعة؟"
-            )
-          ) {
-
-            accounts =
-              restored.map(
-                account => ({
-
-                  ...account,
-
-                  id:
-                    account.id ||
-                    Date.now()
-                      .toString() +
-                    Math.random()
-                      .toString(16)
-                      .slice(2)
-
-                })
-              );
-
-
-            saveData();
-
-            renderAccounts();
-
-            alert(
-              "تم استرجاع البيانات بنجاح"
-            );
-
-          }
-
-        } catch (error) {
-
-          alert(
-            "ملف النسخة الاحتياطية غير صالح"
-          );
-
-        }
-
-
-        event.target.value =
-          "";
-
-      };
-
-
-    reader.readAsText(
-      file
-    );
-
-  }
-
-
-  function exportCSV() {
-
-    if (
-      accounts.length === 0
-    ) {
-
-      alert(
-        "لا توجد حسابات للتصدير"
-      );
-
-      return;
-
-    }
-
-
-    const rows = [
-
-      [
-        "اسم الزبون",
-        "التاريخ",
-        "مستحق له",
-        "مستحق لنا",
-        "الرصيد"
-      ]
-
-    ];
-
-
-    accounts.forEach(
-      account => {
-
-        rows.push([
-
-          account.customer,
-
-          account.date || "",
-
-          account.forCustomer,
-
-          account.forUs,
-
-          Number(
-            account.forUs || 0
-          ) -
-          Number(
-            account.forCustomer || 0
-          )
-
-        ]);
-
-      }
-    );
-
-
-    const csv =
-      "\uFEFF" +
-      rows
-        .map(
-          row =>
-            row
-              .map(
-                value =>
-                  '"' +
-                  String(value)
-                    .replace(
-                      /"/g,
-                      '""'
-                    ) +
-                  '"'
-              )
-              .join(",")
-        )
-        .join("\n");
-
-
-    const blob =
-      new Blob(
-        [csv],
-        {
-          type:
-            "text/csv;charset=utf-8;"
-        }
-      );
-
-
-    const url =
-      URL.createObjectURL(
-        blob
-      );
-
-
-    const link =
-      document.createElement(
-        "a"
-      );
-
-
-    link.href =
-      url;
-
-
-    link.download =
-      "حسابات-البيان-" +
-      getToday() +
-      ".csv";
-
-
-    link.click();
-
-
-    URL.revokeObjectURL(
-      url
-    );
-
-  }
-
-
-  function escapeHtml(text) {
-
-    const div =
-      document.createElement(
-        "div"
-      );
-
-    div.textContent =
-      text;
-
-    return div.innerHTML;
-
-  }
-
-
-  renderAccounts();
+  };
+
+  reader.readAsText(file);
+}
+
+function refresh(){
+  renderCustomerSelect();
+  renderCustomers();
+  renderTransactions();
+  dashboard();
+}
+
+refresh();
 
 </script>
 
