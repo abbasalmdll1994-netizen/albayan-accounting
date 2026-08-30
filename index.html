@@ -9,246 +9,372 @@
   <style>
     *{
       box-sizing:border-box;
+      margin:0;
+      padding:0;
       font-family:Tahoma,Arial,sans-serif;
     }
 
     body{
-      margin:0;
-      background:#f3f6f9;
+      background:#f4f7fb;
       color:#1f2937;
+      min-height:100vh;
     }
 
     header{
-      background:linear-gradient(135deg,#123b63,#1f6fa5);
-      color:#fff;
-      padding:18px;
-      text-align:center;
+      background:linear-gradient(135deg,#123b63,#1d5f91);
+      color:white;
+      padding:18px 16px;
+      box-shadow:0 4px 15px rgba(0,0,0,.15);
       position:sticky;
       top:0;
-      z-index:10;
-      box-shadow:0 2px 8px rgba(0,0,0,.15);
+      z-index:100;
     }
 
-    header h1{
-      margin:0;
-      font-size:23px;
+    .topbar{
+      max-width:1200px;
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
     }
 
-    header p{
-      margin:6px 0 0;
+    .brand h1{
+      font-size:24px;
+      margin-bottom:4px;
+    }
+
+    .brand p{
       font-size:13px;
-      opacity:.9;
+      opacity:.85;
+    }
+
+    .menu-btn{
+      border:none;
+      background:white;
+      color:#123b63;
+      width:42px;
+      height:42px;
+      border-radius:12px;
+      font-size:22px;
+      cursor:pointer;
+      font-weight:bold;
     }
 
     .container{
-      max-width:1100px;
+      max-width:1200px;
       margin:auto;
-      padding:15px;
+      padding:20px 14px 90px;
     }
 
-    .menu{
+    .welcome{
+      background:white;
+      border-radius:18px;
+      padding:20px;
+      margin-bottom:18px;
+      box-shadow:0 5px 18px rgba(0,0,0,.07);
+      border-right:5px solid #1d5f91;
+    }
+
+    .welcome h2{
+      color:#123b63;
+      margin-bottom:8px;
+      font-size:22px;
+    }
+
+    .welcome p{
+      color:#64748b;
+      line-height:1.8;
+      font-size:14px;
+    }
+
+    .stats{
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      gap:10px;
-      margin-bottom:15px;
+      gap:12px;
+      margin-bottom:20px;
     }
 
-    .menu button{
-      border:0;
-      background:#fff;
-      padding:14px 6px;
-      border-radius:12px;
-      font-size:14px;
+    .stat{
+      background:white;
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 5px 18px rgba(0,0,0,.06);
+    }
+
+    .stat .label{
+      color:#64748b;
+      font-size:13px;
+      margin-bottom:8px;
+    }
+
+    .stat .value{
+      font-size:22px;
       font-weight:bold;
       color:#123b63;
-      box-shadow:0 2px 8px rgba(0,0,0,.08);
-      cursor:pointer;
     }
 
-    .menu button.active{
-      background:#123b63;
-      color:#fff;
+    .section-title{
+      margin:8px 0 14px;
+      color:#123b63;
+      font-size:19px;
     }
 
-    .page{
-      display:none;
-    }
-
-    .page.active{
-      display:block;
-    }
-
-    .cards{
+    .grid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
-      gap:12px;
+      gap:14px;
     }
 
     .card{
-      background:#fff;
-      border-radius:14px;
-      padding:18px;
-      box-shadow:0 2px 10px rgba(0,0,0,.08);
+      background:white;
+      border-radius:18px;
+      padding:20px 14px;
+      text-align:center;
+      box-shadow:0 5px 18px rgba(0,0,0,.07);
+      cursor:pointer;
+      transition:.2s;
+      border:1px solid #edf2f7;
+      min-height:145px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
     }
 
-    .card .title{
-      font-size:14px;
-      color:#667085;
+    .card:active{
+      transform:scale(.97);
     }
 
-    .card .number{
-      margin-top:10px;
-      font-size:25px;
-      font-weight:bold;
+    .icon{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      background:#eaf3fb;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-size:29px;
+      margin-bottom:12px;
+    }
+
+    .card h3{
+      font-size:16px;
       color:#123b63;
+      margin-bottom:6px;
     }
 
-    .green{
-      color:#16864b!important;
+    .card p{
+      font-size:12px;
+      color:#64748b;
+      line-height:1.6;
     }
 
-    .red{
-      color:#c0392b!important;
+    .panel{
+      display:none;
+      background:white;
+      border-radius:18px;
+      padding:18px;
+      margin-top:18px;
+      box-shadow:0 5px 18px rgba(0,0,0,.07);
     }
 
-    .section{
-      background:#fff;
-      border-radius:14px;
-      padding:15px;
-      margin-top:15px;
-      box-shadow:0 2px 10px rgba(0,0,0,.07);
+    .panel.active{
+      display:block;
     }
 
-    .section h2{
-      margin:0 0 15px;
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:18px;
+    }
+
+    .panel-head h2{
       color:#123b63;
       font-size:20px;
     }
 
-    .form-grid{
-      display:grid;
-      grid-template-columns:2fr 1fr 1fr auto;
-      gap:8px;
-    }
-
-    input,select{
-      width:100%;
-      padding:12px;
-      border:1px solid #d0d5dd;
-      border-radius:9px;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-    }
-
-    input:focus,select:focus{
-      border-color:#1f6fa5;
-    }
-
-    .btn{
-      border:0;
-      border-radius:9px;
-      padding:12px 18px;
-      background:#123b63;
-      color:white;
-      font-size:15px;
-      font-weight:bold;
+    .close-btn{
+      border:none;
+      background:#eef2f7;
+      color:#334155;
+      padding:9px 13px;
+      border-radius:10px;
       cursor:pointer;
     }
 
-    .btn-green{
-      background:#16864b;
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
     }
 
-    .btn-red{
-      background:#c0392b;
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
     }
 
-    .btn-gray{
-      background:#667085;
+    .field label{
+      font-size:13px;
+      color:#475569;
+      font-weight:bold;
+    }
+
+    .field input,
+    .field select,
+    .field textarea{
+      width:100%;
+      border:1px solid #cbd5e1;
+      border-radius:12px;
+      padding:12px;
+      outline:none;
+      background:#fff;
+      font-size:14px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus{
+      border-color:#1d5f91;
+      box-shadow:0 0 0 3px rgba(29,95,145,.10);
+    }
+
+    .full{
+      grid-column:1/-1;
+    }
+
+    .actions{
+      margin-top:15px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:12px 18px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:14px;
+    }
+
+    .btn-primary{
+      background:#123b63;
+      color:white;
+    }
+
+    .btn-secondary{
+      background:#e2e8f0;
+      color:#334155;
+    }
+
+    .table-wrap{
+      margin-top:18px;
+      overflow:auto;
     }
 
     table{
       width:100%;
       border-collapse:collapse;
-      margin-top:15px;
       min-width:650px;
     }
 
+    th,td{
+      padding:12px;
+      border-bottom:1px solid #e2e8f0;
+      text-align:right;
+      font-size:13px;
+    }
+
     th{
-      background:#123b63;
-      color:#fff;
-      padding:12px 8px;
-      font-size:14px;
-    }
-
-    td{
-      border-bottom:1px solid #e5e7eb;
-      padding:11px 8px;
-      text-align:center;
-      font-size:14px;
-    }
-
-    tr:hover td{
       background:#f8fafc;
-    }
-
-    .table-wrap{
-      overflow-x:auto;
-    }
-
-    .balance-positive{
-      color:#c0392b;
-      font-weight:bold;
-    }
-
-    .balance-negative{
-      color:#16864b;
-      font-weight:bold;
+      color:#123b63;
     }
 
     .empty{
+      padding:20px;
       text-align:center;
-      padding:30px;
-      color:#667085;
+      color:#94a3b8;
     }
 
-    .small-btn{
-      border:0;
-      border-radius:7px;
-      padding:7px 10px;
-      color:#fff;
+    .bottom-nav{
+      position:fixed;
+      bottom:0;
+      right:0;
+      left:0;
+      background:white;
+      border-top:1px solid #e2e8f0;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      padding:8px 5px;
+      z-index:200;
+      box-shadow:0 -4px 15px rgba(0,0,0,.05);
+    }
+
+    .bottom-nav button{
+      border:none;
+      background:transparent;
+      color:#64748b;
+      padding:5px;
+      font-size:11px;
       cursor:pointer;
-      margin:2px;
-      font-size:12px;
     }
 
-    .search{
-      margin-bottom:10px;
+    .bottom-nav span{
+      display:block;
+      font-size:20px;
+      margin-bottom:2px;
     }
 
-    .footer{
-      text-align:center;
-      color:#667085;
-      font-size:12px;
-      padding:25px 5px;
-    }
-
-    @media(max-width:700px){
-      .menu{
+    @media(max-width:850px){
+      .stats{
         grid-template-columns:repeat(2,1fr);
       }
 
-      .cards{
-        grid-template-columns:1fr;
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:520px){
+      .brand h1{
+        font-size:20px;
+      }
+
+      .container{
+        padding-top:14px;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+      }
+
+      .card{
+        min-height:128px;
+        padding:15px 8px;
+      }
+
+      .icon{
+        width:50px;
+        height:50px;
+        font-size:25px;
       }
 
       .form-grid{
         grid-template-columns:1fr;
       }
 
-      header h1{
-        font-size:20px;
+      .full{
+        grid-column:auto;
       }
     }
   </style>
@@ -257,615 +383,572 @@
 <body>
 
 <header>
-  <h1>برنامج البيان المحاسبي</h1>
-  <p>نظام مبسط لإدارة الحسابات والزبائن</p>
+  <div class="topbar">
+    <div class="brand">
+      <h1>برنامج البيان المحاسبي</h1>
+      <p>إدارة الحسابات والمبيعات والمخزون</p>
+    </div>
+
+    <button class="menu-btn" onclick="goHome()">⌂</button>
+  </div>
 </header>
 
-<div class="container">
+<main class="container">
 
-  <div class="menu">
-    <button class="active" onclick="showPage('home',this)">🏠 الرئيسية</button>
-    <button onclick="showPage('customers',this)">👥 الزبائن</button>
-    <button onclick="showPage('transactions',this)">💰 الحركات</button>
-    <button onclick="showPage('reports',this)">📊 التقارير</button>
-  </div>
+  <section id="home">
 
-  <!-- الرئيسية -->
-  <div id="home" class="page active">
+    <div class="welcome">
+      <h2>مرحباً بك في البيان</h2>
+      <p>
+        من هنا تقدر تدير الزبائن والموردين والمبيعات والمشتريات
+        والمخزون والصندوق والحسابات والتقارير من واجهة وحدة.
+      </p>
+    </div>
 
-    <div class="cards">
-
-      <div class="card">
-        <div class="title">عدد الزبائن</div>
-        <div class="number" id="customerCount">0</div>
+    <div class="stats">
+      <div class="stat">
+        <div class="label">إجمالي المبيعات</div>
+        <div class="value" id="salesTotal">0</div>
       </div>
 
-      <div class="card">
-        <div class="title">لنا على الزبائن</div>
-        <div class="number green" id="totalForUs">0 د.ع</div>
+      <div class="stat">
+        <div class="label">إجمالي المشتريات</div>
+        <div class="value" id="purchaseTotal">0</div>
       </div>
 
-      <div class="card">
-        <div class="title">للزبائن علينا</div>
-        <div class="number red" id="totalForThem">0 د.ع</div>
+      <div class="stat">
+        <div class="label">عدد الزبائن</div>
+        <div class="value" id="customersCount">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">الرصيد بالصندوق</div>
+        <div class="value" id="cashBalance">0</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">القائمة الرئيسية</h2>
+
+    <div class="grid">
+
+      <div class="card" onclick="openPanel('inventory')">
+        <div class="icon">📦</div>
+        <h3>الأصناف والمخزون</h3>
+        <p>إضافة الأصناف والكميات والأسعار</p>
+      </div>
+
+      <div class="card" onclick="openPanel('customers')">
+        <div class="icon">👥</div>
+        <h3>الزبائن والموردون</h3>
+        <p>إدارة الحسابات والأرصدة</p>
+      </div>
+
+      <div class="card" onclick="openPanel('sales')">
+        <div class="icon">🧾</div>
+        <h3>المبيعات</h3>
+        <p>إنشاء وتسجيل فواتير البيع</p>
+      </div>
+
+      <div class="card" onclick="openPanel('purchases')">
+        <div class="icon">🛒</div>
+        <h3>المشتريات</h3>
+        <p>تسجيل فواتير الشراء</p>
+      </div>
+
+      <div class="card" onclick="openPanel('cash')">
+        <div class="icon">💰</div>
+        <h3>الصندوق</h3>
+        <p>المقبوضات والمدفوعات</p>
+      </div>
+
+      <div class="card" onclick="openPanel('accounts')">
+        <div class="icon">📒</div>
+        <h3>الحسابات</h3>
+        <p>الديون والحركات والأرصدة</p>
+      </div>
+
+      <div class="card" onclick="openPanel('reports')">
+        <div class="icon">📊</div>
+        <h3>التقارير</h3>
+        <p>تقارير المبيعات والحسابات</p>
+      </div>
+
+      <div class="card" onclick="openPanel('users')">
+        <div class="icon">🔐</div>
+        <h3>المستخدمون</h3>
+        <p>المستخدمون والصلاحيات</p>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="panel" id="customers">
+
+    <div class="panel-head">
+      <h2>الزبائن والموردون</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>الاسم</label>
+        <input id="customerName" type="text" placeholder="اسم الزبون أو المورد">
+      </div>
+
+      <div class="field">
+        <label>النوع</label>
+        <select id="customerType">
+          <option value="زبون">زبون</option>
+          <option value="مورد">مورد</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>دائن له</label>
+        <input id="creditFor" type="number" value="0">
+      </div>
+
+      <div class="field">
+        <label>دائن لنا</label>
+        <input id="creditUs" type="number" value="0">
+      </div>
+
+      <div class="field full">
+        <label>ملاحظات</label>
+        <textarea id="customerNote" rows="3" placeholder="ملاحظات إضافية"></textarea>
       </div>
 
     </div>
 
-    <div class="section">
-      <h2>آخر الحركات</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="addCustomer()">حفظ الحساب</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
           <tr>
-            <th>التاريخ</th>
-            <th>الزبون</th>
-            <th>البيان</th>
-            <th>له</th>
-            <th>لنا</th>
-          </tr>
-          </thead>
-          <tbody id="recentTransactions"></tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- الزبائن -->
-  <div id="customers" class="page">
-
-    <div class="section">
-      <h2>إضافة زبون جديد</h2>
-
-      <div class="form-grid">
-        <input id="customerName" type="text" placeholder="اسم الزبون">
-
-        <input id="customerPhone" type="text" placeholder="رقم الهاتف">
-
-        <input id="openingBalance" type="number" placeholder="الرصيد الافتتاحي">
-
-        <button class="btn btn-green" onclick="addCustomer()">إضافة</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>قائمة الزبائن</h2>
-
-      <input
-        class="search"
-        id="customerSearch"
-        type="text"
-        placeholder="🔍 ابحث عن زبون..."
-        oninput="renderCustomers()"
-      >
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-          <tr>
-            <th>الزبون</th>
-            <th>الهاتف</th>
-            <th>له</th>
-            <th>لنا</th>
+            <th>الاسم</th>
+            <th>النوع</th>
+            <th>دائن له</th>
+            <th>دائن لنا</th>
             <th>الرصيد</th>
-            <th>إجراء</th>
           </tr>
-          </thead>
+        </thead>
+        <tbody id="customersTable"></tbody>
+      </table>
+    </div>
 
-          <tbody id="customersTable"></tbody>
-        </table>
+  </section>
+
+  <section class="panel" id="inventory">
+    <div class="panel-head">
+      <h2>الأصناف والمخزون</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>اسم الصنف</label>
+        <input id="itemName" type="text">
+      </div>
+
+      <div class="field">
+        <label>الكمية</label>
+        <input id="itemQty" type="number" value="1">
+      </div>
+
+      <div class="field">
+        <label>سعر الشراء</label>
+        <input id="buyPrice" type="number" value="0">
+      </div>
+
+      <div class="field">
+        <label>سعر البيع</label>
+        <input id="sellPrice" type="number" value="0">
       </div>
     </div>
 
-  </div>
-
-  <!-- الحركات -->
-  <div id="transactions" class="page">
-
-    <div class="section">
-      <h2>إضافة حركة حساب</h2>
-
-      <div class="form-grid">
-
-        <select id="transactionCustomer">
-          <option value="">اختر الزبون</option>
-        </select>
-
-        <input id="transactionDescription" type="text" placeholder="البيان / الملاحظة">
-
-        <select id="transactionType">
-          <option value="us">لنا عليه</option>
-          <option value="them">له علينا</option>
-        </select>
-
-        <input id="transactionAmount" type="number" placeholder="المبلغ">
-
-      </div>
-
-      <button
-        class="btn btn-green"
-        style="margin-top:10px;width:100%"
-        onclick="addTransaction()"
-      >
-        حفظ الحركة
-      </button>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="addItem()">إضافة الصنف</button>
     </div>
 
-    <div class="section">
-      <h2>سجل الحركات</h2>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
+    <div class="table-wrap">
+      <table>
+        <thead>
           <tr>
-            <th>التاريخ</th>
-            <th>الزبون</th>
-            <th>البيان</th>
-            <th>له</th>
-            <th>لنا</th>
-            <th>إجراء</th>
+            <th>الصنف</th>
+            <th>الكمية</th>
+            <th>شراء</th>
+            <th>بيع</th>
           </tr>
-          </thead>
+        </thead>
+        <tbody id="itemsTable"></tbody>
+      </table>
+    </div>
+  </section>
 
-          <tbody id="transactionsTable"></tbody>
-        </table>
+  <section class="panel" id="sales">
+    <div class="panel-head">
+      <h2>المبيعات</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>اسم الزبون</label>
+        <input id="saleCustomer" type="text">
+      </div>
+
+      <div class="field">
+        <label>المبلغ</label>
+        <input id="saleAmount" type="number" value="0">
       </div>
     </div>
 
-  </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="addSale()">تسجيل البيع</button>
+    </div>
+  </section>
 
-  <!-- التقارير -->
-  <div id="reports" class="page">
+  <section class="panel" id="purchases">
+    <div class="panel-head">
+      <h2>المشتريات</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
 
-    <div class="section">
-      <h2>ملخص الحسابات</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label>اسم المورد</label>
+        <input id="purchaseSupplier" type="text">
+      </div>
 
-      <div class="cards">
-
-        <div class="card">
-          <div class="title">إجمالي لنا</div>
-          <div class="number green" id="reportForUs">0 د.ع</div>
-        </div>
-
-        <div class="card">
-          <div class="title">إجمالي لهم</div>
-          <div class="number red" id="reportForThem">0 د.ع</div>
-        </div>
-
-        <div class="card">
-          <div class="title">صافي الحساب</div>
-          <div class="number" id="netBalance">0 د.ع</div>
-        </div>
-
+      <div class="field">
+        <label>المبلغ</label>
+        <input id="purchaseAmount" type="number" value="0">
       </div>
     </div>
 
-    <div class="section">
-      <h2>النسخ الاحتياطي</h2>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="addPurchase()">تسجيل الشراء</button>
+    </div>
+  </section>
 
-      <button class="btn" onclick="exportData()">تنزيل نسخة احتياطية</button>
-
-      <label class="btn btn-gray" style="display:inline-block;cursor:pointer">
-        استيراد نسخة
-        <input
-          type="file"
-          accept=".json"
-          onchange="importData(event)"
-          style="display:none"
-        >
-      </label>
+  <section class="panel" id="cash">
+    <div class="panel-head">
+      <h2>الصندوق</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
     </div>
 
-  </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>نوع الحركة</label>
+        <select id="cashType">
+          <option value="in">مقبوض</option>
+          <option value="out">مدفوع</option>
+        </select>
+      </div>
 
-</div>
+      <div class="field">
+        <label>المبلغ</label>
+        <input id="cashAmount" type="number" value="0">
+      </div>
 
-<div class="footer">
-  برنامج البيان المحاسبي © 2026
+      <div class="field full">
+        <label>البيان</label>
+        <input id="cashNote" type="text" placeholder="سبب الحركة">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" onclick="addCash()">حفظ الحركة</button>
+    </div>
+  </section>
+
+  <section class="panel" id="accounts">
+    <div class="panel-head">
+      <h2>الحسابات</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
+    <div class="empty">سيتم عرض أرصدة وحركات الحسابات هنا.</div>
+  </section>
+
+  <section class="panel" id="reports">
+    <div class="panel-head">
+      <h2>التقارير</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">المبيعات</div>
+        <div class="value" id="reportSales">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">المشتريات</div>
+        <div class="value" id="reportPurchases">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">الزبائن والموردون</div>
+        <div class="value" id="reportCustomers">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="label">الصندوق</div>
+        <div class="value" id="reportCash">0</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="users">
+    <div class="panel-head">
+      <h2>المستخدمون والصلاحيات</h2>
+      <button class="close-btn" onclick="goHome()">رجوع</button>
+    </div>
+    <div class="empty">قسم المستخدمين والصلاحيات جاهز للتطوير بالمرحلة القادمة.</div>
+  </section>
+
+</main>
+
+<div class="bottom-nav">
+  <button onclick="goHome()">
+    <span>🏠</span>
+    الرئيسية
+  </button>
+
+  <button onclick="openPanel('sales')">
+    <span>🧾</span>
+    المبيعات
+  </button>
+
+  <button onclick="openPanel('customers')">
+    <span>👥</span>
+    الحسابات
+  </button>
+
+  <button onclick="openPanel('reports')">
+    <span>📊</span>
+    التقارير
+  </button>
 </div>
 
 <script>
+  let customers = JSON.parse(localStorage.getItem("bayan_customers")) || [];
+  let items = JSON.parse(localStorage.getItem("bayan_items")) || [];
 
-let customers = JSON.parse(localStorage.getItem("albayan_customers")) || [];
-let transactions = JSON.parse(localStorage.getItem("albayan_transactions")) || [];
-
-function saveData(){
-  localStorage.setItem("albayan_customers", JSON.stringify(customers));
-  localStorage.setItem("albayan_transactions", JSON.stringify(transactions));
-}
-
-function money(value){
-  return Number(value || 0).toLocaleString("en-US") + " د.ع";
-}
-
-function showPage(id,button){
-
-  document.querySelectorAll(".page").forEach(page=>{
-    page.classList.remove("active");
-  });
-
-  document.getElementById(id).classList.add("active");
-
-  document.querySelectorAll(".menu button").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  if(button){
-    button.classList.add("active");
-  }
-
-  refresh();
-}
-
-function addCustomer(){
-
-  const name = document.getElementById("customerName").value.trim();
-  const phone = document.getElementById("customerPhone").value.trim();
-  const opening = Number(document.getElementById("openingBalance").value || 0);
-
-  if(!name){
-    alert("يرجى كتابة اسم الزبون");
-    return;
-  }
-
-  const customer = {
-    id:Date.now(),
-    name:name,
-    phone:phone
+  let totals = JSON.parse(localStorage.getItem("bayan_totals")) || {
+    sales:0,
+    purchases:0,
+    cash:0
   };
 
-  customers.push(customer);
+  function money(value){
+    return Number(value || 0).toLocaleString("ar-IQ") + " د.ع";
+  }
 
-  if(opening > 0){
-    transactions.push({
-      id:Date.now()+1,
-      customerId:customer.id,
-      description:"رصيد افتتاحي",
-      type:"us",
-      amount:opening,
-      date:new Date().toLocaleDateString("ar-IQ")
+  function openPanel(id){
+    document.getElementById("home").style.display = "none";
+
+    document.querySelectorAll(".panel").forEach(panel=>{
+      panel.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
     });
   }
 
-  saveData();
-
-  document.getElementById("customerName").value="";
-  document.getElementById("customerPhone").value="";
-  document.getElementById("openingBalance").value="";
-
-  refresh();
-
-  alert("تمت إضافة الزبون بنجاح");
-}
-
-function addTransaction(){
-
-  const customerId = Number(document.getElementById("transactionCustomer").value);
-  const description = document.getElementById("transactionDescription").value.trim();
-  const type = document.getElementById("transactionType").value;
-  const amount = Number(document.getElementById("transactionAmount").value);
-
-  if(!customerId){
-    alert("اختر الزبون");
-    return;
-  }
-
-  if(!amount || amount <= 0){
-    alert("أدخل مبلغ صحيح");
-    return;
-  }
-
-  transactions.unshift({
-    id:Date.now(),
-    customerId:customerId,
-    description:description || "حركة حساب",
-    type:type,
-    amount:amount,
-    date:new Date().toLocaleDateString("ar-IQ")
-  });
-
-  saveData();
-
-  document.getElementById("transactionDescription").value="";
-  document.getElementById("transactionAmount").value="";
-
-  refresh();
-
-  alert("تم حفظ الحركة");
-}
-
-function deleteCustomer(id){
-
-  if(!confirm("هل تريد حذف الزبون وجميع حركاته؟")){
-    return;
-  }
-
-  customers = customers.filter(c=>c.id !== id);
-  transactions = transactions.filter(t=>t.customerId !== id);
-
-  saveData();
-  refresh();
-}
-
-function deleteTransaction(id){
-
-  if(!confirm("هل تريد حذف هذه الحركة؟")){
-    return;
-  }
-
-  transactions = transactions.filter(t=>t.id !== id);
-
-  saveData();
-  refresh();
-}
-
-function customerTotals(customerId){
-
-  let us = 0;
-  let them = 0;
-
-  transactions
-    .filter(t=>t.customerId === customerId)
-    .forEach(t=>{
-
-      if(t.type === "us"){
-        us += Number(t.amount);
-      }else{
-        them += Number(t.amount);
-      }
-
+  function goHome(){
+    document.querySelectorAll(".panel").forEach(panel=>{
+      panel.classList.remove("active");
     });
 
-  return {
-    us,
-    them,
-    balance:us-them
-  };
-}
+    document.getElementById("home").style.display = "block";
 
-function renderCustomers(){
-
-  const tbody = document.getElementById("customersTable");
-  const search = document.getElementById("customerSearch").value.toLowerCase();
-
-  tbody.innerHTML="";
-
-  const filtered = customers.filter(c=>
-    c.name.toLowerCase().includes(search) ||
-    (c.phone || "").includes(search)
-  );
-
-  if(filtered.length === 0){
-
-    tbody.innerHTML=`
-      <tr>
-        <td colspan="6" class="empty">لا يوجد زبائن</td>
-      </tr>
-    `;
-
-    return;
+    updateDashboard();
   }
 
-  filtered.forEach(customer=>{
+  function addCustomer(){
+    const name = document.getElementById("customerName").value.trim();
+    const type = document.getElementById("customerType").value;
+    const creditFor = Number(document.getElementById("creditFor").value || 0);
+    const creditUs = Number(document.getElementById("creditUs").value || 0);
+    const note = document.getElementById("customerNote").value.trim();
 
-    const totals = customerTotals(customer.id);
+    if(!name){
+      alert("اكتب اسم الزبون أو المورد");
+      return;
+    }
 
-    const balanceClass =
-      totals.balance >= 0
-      ? "balance-positive"
-      : "balance-negative";
+    customers.push({
+      name,
+      type,
+      creditFor,
+      creditUs,
+      note
+    });
 
-    tbody.innerHTML += `
-      <tr>
-        <td>${customer.name}</td>
-        <td>${customer.phone || "-"}</td>
-        <td>${money(totals.them)}</td>
-        <td>${money(totals.us)}</td>
-        <td class="${balanceClass}">
-          ${money(Math.abs(totals.balance))}
-          ${totals.balance > 0 ? " لنا" : totals.balance < 0 ? " له" : ""}
-        </td>
-        <td>
-          <button
-            class="small-btn btn-red"
-            onclick="deleteCustomer(${customer.id})"
-          >
-            حذف
-          </button>
-        </td>
-      </tr>
-    `;
+    localStorage.setItem("bayan_customers", JSON.stringify(customers));
 
-  });
-}
+    document.getElementById("customerName").value = "";
+    document.getElementById("creditFor").value = 0;
+    document.getElementById("creditUs").value = 0;
+    document.getElementById("customerNote").value = "";
 
-function renderCustomerSelect(){
-
-  const select = document.getElementById("transactionCustomer");
-
-  const oldValue = select.value;
-
-  select.innerHTML='<option value="">اختر الزبون</option>';
-
-  customers.forEach(c=>{
-    select.innerHTML += `
-      <option value="${c.id}">
-        ${c.name}
-      </option>
-    `;
-  });
-
-  select.value=oldValue;
-}
-
-function renderTransactions(){
-
-  const tbody = document.getElementById("transactionsTable");
-
-  tbody.innerHTML="";
-
-  if(transactions.length === 0){
-
-    tbody.innerHTML=`
-      <tr>
-        <td colspan="6" class="empty">لا توجد حركات</td>
-      </tr>
-    `;
-
-    return;
+    renderCustomers();
+    updateDashboard();
   }
 
-  transactions.forEach(t=>{
+  function renderCustomers(){
+    const tbody = document.getElementById("customersTable");
+    tbody.innerHTML = "";
 
-    const customer = customers.find(c=>c.id === t.customerId);
+    customers.forEach(c=>{
+      const balance = c.creditUs - c.creditFor;
 
-    tbody.innerHTML += `
-      <tr>
-        <td>${t.date}</td>
-        <td>${customer ? customer.name : "-"}</td>
-        <td>${t.description}</td>
-        <td>${t.type === "them" ? money(t.amount) : "-"}</td>
-        <td>${t.type === "us" ? money(t.amount) : "-"}</td>
-        <td>
-          <button
-            class="small-btn btn-red"
-            onclick="deleteTransaction(${t.id})"
-          >
-            حذف
-          </button>
-        </td>
-      </tr>
-    `;
+      tbody.innerHTML += `
+        <tr>
+          <td>${c.name}</td>
+          <td>${c.type}</td>
+          <td>${money(c.creditFor)}</td>
+          <td>${money(c.creditUs)}</td>
+          <td>${money(balance)}</td>
+        </tr>
+      `;
+    });
+  }
 
-  });
-}
+  function addItem(){
+    const name = document.getElementById("itemName").value.trim();
+    const qty = Number(document.getElementById("itemQty").value || 0);
+    const buy = Number(document.getElementById("buyPrice").value || 0);
+    const sell = Number(document.getElementById("sellPrice").value || 0);
 
-function dashboard(){
+    if(!name){
+      alert("اكتب اسم الصنف");
+      return;
+    }
 
-  let totalUs = 0;
-  let totalThem = 0;
+    items.push({
+      name,
+      qty,
+      buy,
+      sell
+    });
 
-  transactions.forEach(t=>{
+    localStorage.setItem("bayan_items", JSON.stringify(items));
 
-    if(t.type === "us"){
-      totalUs += Number(t.amount);
+    document.getElementById("itemName").value = "";
+    document.getElementById("itemQty").value = 1;
+    document.getElementById("buyPrice").value = 0;
+    document.getElementById("sellPrice").value = 0;
+
+    renderItems();
+  }
+
+  function renderItems(){
+    const tbody = document.getElementById("itemsTable");
+    tbody.innerHTML = "";
+
+    items.forEach(item=>{
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.name}</td>
+          <td>${item.qty}</td>
+          <td>${money(item.buy)}</td>
+          <td>${money(item.sell)}</td>
+        </tr>
+      `;
+    });
+  }
+
+  function addSale(){
+    const amount = Number(document.getElementById("saleAmount").value || 0);
+
+    if(amount <= 0){
+      alert("أدخل مبلغ البيع");
+      return;
+    }
+
+    totals.sales += amount;
+    totals.cash += amount;
+
+    saveTotals();
+
+    document.getElementById("saleCustomer").value = "";
+    document.getElementById("saleAmount").value = 0;
+
+    alert("تم تسجيل عملية البيع");
+  }
+
+  function addPurchase(){
+    const amount = Number(document.getElementById("purchaseAmount").value || 0);
+
+    if(amount <= 0){
+      alert("أدخل مبلغ الشراء");
+      return;
+    }
+
+    totals.purchases += amount;
+    totals.cash -= amount;
+
+    saveTotals();
+
+    document.getElementById("purchaseSupplier").value = "";
+    document.getElementById("purchaseAmount").value = 0;
+
+    alert("تم تسجيل عملية الشراء");
+  }
+
+  function addCash(){
+    const type = document.getElementById("cashType").value;
+    const amount = Number(document.getElementById("cashAmount").value || 0);
+
+    if(amount <= 0){
+      alert("أدخل المبلغ");
+      return;
+    }
+
+    if(type === "in"){
+      totals.cash += amount;
     }else{
-      totalThem += Number(t.amount);
+      totals.cash -= amount;
     }
 
-  });
+    saveTotals();
 
-  document.getElementById("customerCount").textContent=customers.length;
-  document.getElementById("totalForUs").textContent=money(totalUs);
-  document.getElementById("totalForThem").textContent=money(totalThem);
+    document.getElementById("cashAmount").value = 0;
+    document.getElementById("cashNote").value = "";
 
-  document.getElementById("reportForUs").textContent=money(totalUs);
-  document.getElementById("reportForThem").textContent=money(totalThem);
-
-  const net = totalUs-totalThem;
-
-  document.getElementById("netBalance").textContent=
-    money(Math.abs(net)) +
-    (net > 0 ? " لنا" : net < 0 ? " علينا" : "");
-
-  const recent = document.getElementById("recentTransactions");
-
-  recent.innerHTML="";
-
-  transactions.slice(0,5).forEach(t=>{
-
-    const customer=customers.find(c=>c.id===t.customerId);
-
-    recent.innerHTML += `
-      <tr>
-        <td>${t.date}</td>
-        <td>${customer ? customer.name : "-"}</td>
-        <td>${t.description}</td>
-        <td>${t.type==="them" ? money(t.amount) : "-"}</td>
-        <td>${t.type==="us" ? money(t.amount) : "-"}</td>
-      </tr>
-    `;
-
-  });
-
-  if(transactions.length === 0){
-    recent.innerHTML=`
-      <tr>
-        <td colspan="5" class="empty">لا توجد حركات حتى الآن</td>
-      </tr>
-    `;
-  }
-}
-
-function exportData(){
-
-  const data={
-    customers,
-    transactions,
-    exportDate:new Date().toISOString()
-  };
-
-  const blob=new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
-  );
-
-  const url=URL.createObjectURL(blob);
-
-  const a=document.createElement("a");
-
-  a.href=url;
-  a.download="albayan-backup.json";
-  a.click();
-
-  URL.revokeObjectURL(url);
-}
-
-function importData(event){
-
-  const file=event.target.files[0];
-
-  if(!file){
-    return;
+    alert("تم حفظ حركة الصندوق");
   }
 
-  const reader=new FileReader();
+  function saveTotals(){
+    localStorage.setItem("bayan_totals", JSON.stringify(totals));
+    updateDashboard();
+  }
 
-  reader.onload=function(e){
+  function updateDashboard(){
+    document.getElementById("salesTotal").textContent = money(totals.sales);
+    document.getElementById("purchaseTotal").textContent = money(totals.purchases);
+    document.getElementById("customersCount").textContent = customers.length;
+    document.getElementById("cashBalance").textContent = money(totals.cash);
 
-    try{
+    document.getElementById("reportSales").textContent = money(totals.sales);
+    document.getElementById("reportPurchases").textContent = money(totals.purchases);
+    document.getElementById("reportCustomers").textContent = customers.length;
+    document.getElementById("reportCash").textContent = money(totals.cash);
+  }
 
-      const data=JSON.parse(e.target.result);
-
-      customers=data.customers || [];
-      transactions=data.transactions || [];
-
-      saveData();
-      refresh();
-
-      alert("تم استيراد النسخة الاحتياطية بنجاح");
-
-    }catch(error){
-
-      alert("ملف النسخة الاحتياطية غير صالح");
-
-    }
-
-  };
-
-  reader.readAsText(file);
-}
-
-function refresh(){
-  renderCustomerSelect();
   renderCustomers();
-  renderTransactions();
-  dashboard();
-}
-
-refresh();
-
+  renderItems();
+  updateDashboard();
 </script>
 
 </body>
