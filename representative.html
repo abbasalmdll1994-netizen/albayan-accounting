@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#123b63">
+<title>نظام المندوب | مكتب القرية</title>
+<style>
+:root{--navy:#123b63;--blue:#1769aa;--line:#d9e3ed;--muted:#627387;--green:#18864b;--red:#b83232;--bg:#f3f6fa}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:#172b40}button,input,select{font:inherit}button{cursor:pointer}.top{background:var(--navy);color:#fff;padding:18px 20px}.top .wrap{max-width:900px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:16px}.top h1{font-size:22px;margin:0}.top p{margin:3px 0 0;color:#d9e7f3;font-size:13px}.wrap{max-width:900px;margin:auto}.page{padding:18px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}.login{max-width:430px;margin:42px auto}.login h2{text-align:center}.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}.field input,.field select{min-height:48px;border:1px solid #afc0d0;border-radius:10px;padding:10px 12px;background:#fff}.btn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:11px;min-height:48px;padding:10px 16px}.primary{background:var(--navy);color:#fff;border-color:var(--navy)}.wide{width:100%}.muted{color:var(--muted);font-size:13px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px}.card strong{display:block;font-size:24px;margin-top:7px}.route-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.customer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:10px}.customer.done{border-right:5px solid var(--green)}.customer h3{margin:0 0 6px;font-size:18px}.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.small{min-height:40px;padding:8px 12px}.badge{display:inline-block;padding:3px 9px;border-radius:999px;background:#edf3f8;color:var(--navy);font-size:12px}.badge.done{background:#e7f5ed;color:var(--green)}.nav{display:flex;gap:8px;overflow:auto;padding:10px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0}.nav button{white-space:nowrap}.section{display:none}.section.active{display:block}.customer-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.customer-actions button{min-height:70px;font-weight:bold}.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}.danger{color:var(--red)}@media(max-width:600px){.cards{grid-template-columns:repeat(2,1fr)}.top .wrap{align-items:flex-start}.page{padding:12px}.customer-actions{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><div><h1>نظام المندوب</h1><p>مكتب القرية · الجولة اليومية</p></div><button id="logoutBtn" class="btn small" hidden>تسجيل خروج</button></div></header>
+
+<div id="loginView" class="page">
+  <div class="panel login">
+    <h2>تسجيل الدخول</h2>
+    <p class="muted" style="text-align:center">اسم المستخدم محفوظ، أدخل كلمة المرور للدخول.</p>
+    <div class="field"><label>اسم المستخدم</label><input id="username" value="مندوب" readonly></div>
+    <div class="field"><label>كلمة المرور</label><input id="password" type="password" inputmode="numeric" placeholder="أدخل كلمة المرور"></div>
+    <button id="loginBtn" class="btn primary wide">دخول</button>
+    <p id="loginMsg" class="muted" style="text-align:center"></p>
+  </div>
+</div>
+
+<div id="appView" hidden>
+  <nav class="nav wrap">
+    <button class="btn small" data-section="home">الرئيسية</button>
+    <button class="btn small primary" data-section="route">الجولة اليومية</button>
+    <button class="btn small" data-section="customers">الزبائن</button>
+    <button class="btn small" data-section="reports">التقارير</button>
+    <a href="index.html"><button class="btn small">نظام المبيعات</button></a>
+  </nav>
+  <main class="page wrap">
+    <section id="home" class="section">
+      <div class="cards">
+        <div class="card"><span class="muted">زبائن الجولة</span><strong id="homeTotal">0</strong></div>
+        <div class="card"><span class="muted">تمت الزيارة</span><strong id="homeDone">0</strong></div>
+        <div class="card"><span class="muted">المتبقي</span><strong id="homeLeft">0</strong></div>
+      </div>
+      <div class="panel"><h2>اليوم</h2><p id="todayText"></p><button class="btn primary" data-section="route">فتح الجولة اليومية</button></div>
+    </section>
+
+    <section id="route" class="section active">
+      <div class="panel route-head"><div><h2 style="margin:0">الجولة اليومية</h2><p class="muted" id="routeDate"></p></div><button id="addCustomerBtn" class="btn primary small">+ إضافة زبون للخط</button></div>
+      <div class="cards">
+        <div class="card"><span class="muted">العدد</span><strong id="routeTotal">0</strong></div>
+        <div class="card"><span class="muted">تم</span><strong id="routeDone">0</strong></div>
+        <div class="card"><span class="muted">متبقي</span><strong id="routeLeft">0</strong></div>
+      </div>
+      <div id="routeList"></div>
+    </section>
+
+    <section id="customers" class="section">
+      <div class="panel"><h2>الزبائن</h2><div class="field"><input id="customerSearch" placeholder="بحث باسم الزبون أو المنطقة"></div><div id="customerList"></div></div>
+    </section>
+
+    <section id="reports" class="section">
+      <div class="panel"><h2>تقرير الجولة</h2><div class="summary"><div class="card"><span class="muted">زارهم المندوب</span><strong id="reportDone">0</strong></div><div class="card"><span class="muted">لم تتم زيارتهم</span><strong id="reportLeft">0</strong></div></div><h3>الزبائن بدون بيع</h3><div id="noSaleList" class="muted">سيظهر هنا لاحقاً بعد ربط المبيعات مع الزيارات.</div></div>
+    </section>
+
+    <section id="customerView" class="section">
+      <div class="panel"><button id="backRoute" class="btn small">رجوع للجولة</button><h2 id="cvName"></h2><p id="cvInfo" class="muted"></p><div class="customer-actions"><button class="btn primary" id="newSale">🧾 بيع جديد</button><button class="btn" id="payment">💰 تسديد</button><button class="btn" id="statement">📒 كشف حساب</button><button class="btn" id="returns">↩ مرتجع</button></div><div class="row"><button id="markDone" class="btn">✓ تمت الزيارة</button><button id="markNoOrder" class="btn">لم يطلب</button><button id="markClosed" class="btn">مغلق</button></div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const KEY='albayanRepresentativeRouteV1';
+const SESSION='albayanRepLoggedIn';
+const PASSKEY='albayanRepPassword';
+const $=id=>document.getElementById(id);
+let route=JSON.parse(localStorage.getItem(KEY)||'null')||[
+ {id:1,name:'ماركت النور',area:'السوق الكبير',type:'ماركت',status:'pending'},
+ {id:2,name:'أسواق السلام',area:'شارع المحافظة',type:'جملة',status:'pending'},
+ {id:3,name:'مركز الرافدين',area:'حي المعلمين',type:'مفرد',status:'pending'}
+];
+let current=null;
+function save(){localStorage.setItem(KEY,JSON.stringify(route));render()}
+function stats(){const done=route.filter(x=>x.status!=='pending').length;return {total:route.length,done,left:route.length-done}}
+function render(){const s=stats();['homeTotal','routeTotal'].forEach(x=>$(x).textContent=s.total);['homeDone','routeDone','reportDone'].forEach(x=>$(x).textContent=s.done);['homeLeft','routeLeft','reportLeft'].forEach(x=>$(x).textContent=s.left);
+ $('routeList').innerHTML=route.length?route.map((c,i)=>`<div class="customer ${c.status!=='pending'?'done':''}"><span class="badge ${c.status!=='pending'?'done':''}">${statusText(c.status)}</span><h3>${i+1}. ${esc(c.name)}</h3><div class="muted">${esc(c.area||'')} · ${esc(c.type||'')}</div><div class="row"><button class="btn small primary" onclick="openCustomer(${c.id})">فتح الزبون</button></div></div>`).join(''):'<div class="panel muted">لا يوجد زبائن في جولة اليوم.</div>';
+ filterCustomers();}
+function statusText(s){return s==='done'?'تمت الزيارة':s==='no-order'?'لم يطلب':s==='closed'?'مغلق':'بانتظار الزيارة'}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function section(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('[data-section]').forEach(b=>b.classList.toggle('primary',b.dataset.section===id));scrollTo(0,0)}
+function filterCustomers(){const q=($('customerSearch')?.value||'').trim().toLowerCase();if(!$('customerList'))return;const arr=route.filter(c=>(c.name+' '+c.area).toLowerCase().includes(q));$('customerList').innerHTML=arr.map(c=>`<div class="customer"><h3>${esc(c.name)}</h3><div class="muted">${esc(c.area)} · ${esc(c.type)}</div><button class="btn small" onclick="openCustomer(${c.id})">فتح</button></div>`).join('')||'<p class="muted">لا توجد نتائج.</p>'}
+window.openCustomer=id=>{current=route.find(x=>x.id===id);if(!current)return;$('cvName').textContent=current.name;$('cvInfo').textContent=(current.area||'')+' · '+(current.type||'');section('customerView')}
+function setStatus(s){if(!current)return;current.status=s;save();openCustomer(current.id)}
+function login(){const saved=localStorage.getItem(PASSKEY)||'1234';if($('password').value===saved){localStorage.setItem(SESSION,'1');showApp()}else $('loginMsg').textContent='كلمة المرور غير صحيحة'}
+function showApp(){$('loginView').hidden=true;$('appView').hidden=false;$('logoutBtn').hidden=false;render()}
+function logout(){localStorage.removeItem(SESSION);location.reload()}
+const d=new Date();const ds=d.toLocaleDateString('ar-IQ',{weekday:'long',year:'numeric',month:'long',day:'numeric'});$('todayText').textContent=ds;$('routeDate').textContent=ds;
+$('loginBtn').onclick=login;$('password').addEventListener('keydown',e=>{if(e.key==='Enter')login()});$('logoutBtn').onclick=logout;
+document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>section(b.dataset.section));$('backRoute').onclick=()=>section('route');$('customerSearch').oninput=filterCustomers;$('markDone').onclick=()=>setStatus('done');$('markNoOrder').onclick=()=>setStatus('no-order');$('markClosed').onclick=()=>setStatus('closed');
+$('addCustomerBtn').onclick=()=>{const name=prompt('اسم الزبون');if(!name)return;const area=prompt('المنطقة')||'';const type=prompt('نوع الزبون: جملة الجملة / جملة / ماركت / مفرد')||'ماركت';route.push({id:Date.now(),name,area,type,status:'pending'});save()};
+$('newSale').onclick=()=>{localStorage.setItem('albayanRepActiveCustomer',JSON.stringify(current));location.href='index.html#sales'};
+$('payment').onclick=()=>alert('مرحلة التسديد ستكون الربط التالي مع حساب الزبون.');$('statement').onclick=()=>alert('كشف الحساب سيكون مربوطاً بحسابات الزبون في نظام المبيعات.');$('returns').onclick=()=>alert('المرتجعات سنضيفها ضمن المرحلة التالية.');
+if(localStorage.getItem(SESSION)==='1')showApp();
+</script>
+</body></html>
