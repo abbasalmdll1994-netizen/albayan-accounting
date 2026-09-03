@@ -4,6 +4,7 @@ if (!/\/index\.html$/.test(location.pathname) && !location.pathname.endsWith('/a
 function install(){
  const customer=document.getElementById('saleCustomer'),totals=document.getElementById('saleTotals');
  if(!customer||!totals||document.getElementById('salePreviousBalance'))return;
+ const style=document.createElement('style');style.textContent='@media(max-width:750px){#salePreviousBalance{display:none!important}}';document.head.appendChild(style);
  const box=document.createElement('div');box.id='salePreviousBalance';box.className='notice';box.hidden=true;totals.before(box);
  function balance(){const name=customer.value.trim();if(!name||typeof allAccounts!=='function')return 0;const editId=typeof saleEdit!=='undefined'?saleEdit:null;return allAccounts().filter(a=>(a.customer||'').trim()===name&&(!editId||a.invoiceId!==editId)).reduce((s,a)=>s+(Number(a.owedBy)||0)-(Number(a.owedTo)||0),0)}
  function fmt(n){return Math.abs(n).toLocaleString('ar-IQ',{maximumFractionDigits:2})+' د.ع'}
