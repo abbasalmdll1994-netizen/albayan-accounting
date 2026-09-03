@@ -1,6 +1,6 @@
 'use strict';
 // Bump VERSION whenever any precached page, script or icon changes.
-const VERSION = 'offline-20260904-8';
+const VERSION = 'offline-20260904-9';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'qarya-shell:' + BASE.pathname + ':';
 const CACHE = PREFIX + VERSION;
