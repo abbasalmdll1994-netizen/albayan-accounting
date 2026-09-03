@@ -1,7 +1,15 @@
 (() => {
   'use strict';
   const base = new URL('./', document.currentScript.src);
+  function loadMobileUI(){
+    if(document.querySelector('script[data-mobile-ui]')) return;
+    const script=document.createElement('script');
+    script.src=new URL('mobile-ui.js?v=release-20260904-2',base).href;
+    script.dataset.mobileUi='1';
+    document.head.appendChild(script);
+  }
   function init() {
+    loadMobileUI();
     if (window.self !== window.top) return;
     const bar = document.createElement('div');
     bar.id = 'offlineStatus';
