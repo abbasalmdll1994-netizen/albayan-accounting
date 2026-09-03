@@ -5,6 +5,7 @@ let submittedDiscount=0;
 function install(){
   const form=document.getElementById('saleForm');
   if(!form||typeof saleTransaction!=='function'||window.__salesDiscountPrimaryFix)return;
+  if(document.getElementById('saleDiscount')){window.__salesDiscountPrimaryFix=true;return;}
   window.__salesDiscountPrimaryFix=true;
   const baseSaleTransaction=saleTransaction;
   form.addEventListener('submit',()=>{
