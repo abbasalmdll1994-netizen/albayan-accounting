@@ -31,3 +31,22 @@ Cache keys ignore query strings only for the explicit static-file allowlist.
 The browser URL is unchanged, preserving cash-handover mode and other client-side
 parameters. Cross-origin requests, unknown paths, and non-GET requests bypass
 the worker completely.
+
+## Material import
+
+Inventory now reads a single-sheet `.xlsx` file locally with exactly two headers:
+`الرقم المخزني` and `اسم المادة`. It previews each row and requires confirmation.
+Existing codes are skipped unless the user opts to rename existing materials;
+renaming does not change balances, prices or historical invoice descriptions.
+New records retain source order and have `needsSetup: true`, unset price tiers,
+zero initial stock and reorder suggestions disabled. The internal pack-size
+placeholder is hidden until actual packaging is entered. Normal item editing
+requires packaging, stock and at least one tier price before clearing the flag.
+The sales transaction also rejects unfinished items. Before an import is saved,
+a local snapshot is stored in `albayanWorkspaceV1BeforeMaterialImport`.
+
+No external spreadsheet script, server upload or network connection is needed.
+The reader uses native `DecompressionStream('deflate-raw')` and DOMParser; older
+browsers receive a request to update. Run `node test-material-import.cjs` and
+the release/offline tests after changes. An optional local XLSX path tests the
+363-row source workbook without adding business data to the repository.

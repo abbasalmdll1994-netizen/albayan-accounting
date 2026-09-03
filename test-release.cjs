@@ -44,6 +44,16 @@ try{cancelTransaction(cancelled,'sale-1');throw Error('Double cancel accepted')}
 if(!commit(cartonSale))throw Error('Sale persistence failed');
 `, sales.ctx);
 assert.equal(JSON.parse(sales.data.get('albayanWorkspaceV1')).items[0].quantity, 52);
+sales.ctx.MaterialImport = require('./material-import.js');
+vm.runInContext(`
+const imported=validate(MaterialImport.apply(fixture,MaterialImport.plan([{code:'TEST-NEW',name:'مادة اختبار'}],fixture.items),()=> 'import-test'));
+const pending=imported.items.find(i=>i.id==='import-test');
+if(!pending.needsSetup||pending.prices.retail!==null||pending.reorderEnabled!==false)throw Error('Imported setup state mismatch');
+const pendingInvoice=makeInvoice('piece',1);pendingInvoice.lines[0].itemId=pending.id;
+pending.quantity=10;pending.prices.retail=24000;
+let rejected=false;try{saleTransaction(imported,pendingInvoice)}catch(e){rejected=e.message.includes('أكمل بيانات')}
+if(!rejected)throw Error('Pending item allowed for sale');
+`, sales.ctx);
 sales.data.set('albayanWorkspaceV1', 'newer data');
 assert.equal(vm.runInContext('commit({...state})', sales.ctx), false);
 assert.equal(sales.data.get('albayanWorkspaceV1'), 'newer data');

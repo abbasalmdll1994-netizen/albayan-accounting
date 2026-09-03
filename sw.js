@@ -1,6 +1,6 @@
 'use strict';
 // Bump VERSION whenever any precached page, script or icon changes.
-const VERSION = 'offline-20260903-1';
+const VERSION = 'offline-20260903-2';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'qarya-shell:' + BASE.pathname + ':';
 const CACHE = PREFIX + VERSION;
@@ -10,7 +10,7 @@ const FILES = [
   'admin-dashboard.html', 'admin-control.html', 'representatives.html',
   'cash-handover.html', 'rep-daily-close.html', 'route-order.html',
   'stock-orders.js', 'stock-orders-ui.js', 'sync-core.js', 'rep-safety.js',
-  'rep-purchase-report.js', 'cloud-sync.js', 'offline.js',
+  'material-import.js', 'material-import-ui.js', 'rep-purchase-report.js', 'cloud-sync.js', 'offline.js',
   'manifest.webmanifest', 'icons/qarya-wordmark-180.png',
   'icons/qarya-wordmark-192.png', 'icons/qarya-wordmark-512.png',
   'icons/qarya-wordmark-maskable-512.png'

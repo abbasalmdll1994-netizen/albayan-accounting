@@ -34,7 +34,7 @@ function worker({stores = new Map(), fail = false, version} = {}) {
   const self = {location: {href: origin + 'sw.js'}, addEventListener: (n, fn) => handlers[n] = fn,
     clients: {claim: async () => claimed = true}, skipWaiting: () => forced = true};
   const context = vm.createContext({self, caches, Request, Response, URL, fetch});
-  vm.runInContext(version ? code.replace("'offline-20260903-1'", JSON.stringify(version)) : code, context);
+  vm.runInContext(version ? code.replace("'offline-20260903-2'", JSON.stringify(version)) : code, context);
   async function lifecycle(name) { let done; handlers[name]({waitUntil: p => done = p}); await done; }
   function request(path, options) {
     let response;
