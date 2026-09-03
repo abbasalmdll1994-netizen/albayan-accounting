@@ -1,0 +1,10 @@
+(() => {
+'use strict';
+function escP(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function table(lines){return `<div style="overflow:auto"><table><thead><tr><th>الرقم المخزني</th><th>اسم المادة</th><th>الكمية (كارتون)</th></tr></thead><tbody>${lines.map(l=>`<tr><td>${escP(l.code)||'—'}</td><td>${escP(l.name)}</td><td>${escP(l.cartons)}</td></tr>`).join('')}</tbody></table></div>`;}
+function addPurchaseList(){const page=document.getElementById('purchaseOrders');if(!page||document.getElementById('purchaseListPanel'))return;const panel=document.createElement('div');panel.id='purchaseListPanel';panel.className='panel';panel.innerHTML='<div class="toolbar"><h3>قائمة المشتريات</h3><button type="button" id="refreshPurchaseList">تحديث</button></div><p class="muted">قائمة مستقلة للمواد المشتراة، والكميات بالكارتون فقط.</p><div id="purchaseListRows"></div>';page.appendChild(panel);document.getElementById('refreshPurchaseList').onclick=renderPurchaseList;renderPurchaseList();}
+function renderPurchaseList(){const out=document.getElementById('purchaseListRows');if(!out)return;const orders=[...(window.state?.purchaseOrders||[])].filter(o=>o.status==='received').reverse();out.innerHTML=orders.map(o=>`<details class="po-item"><summary><strong>قائمة مشتريات ${escP(o.number)} · ${escP(o.supplier)}</strong></summary><p>${escP(o.receivedDate||o.date)}${o.receiptReference?' · فاتورة / سند: '+escP(o.receiptReference):''}</p>${table(o.lines)}</details>`).join('')||'<p class="empty">لا توجد مشتريات مستلمة بعد.</p>';}
+window.renderPurchaseList=renderPurchaseList;
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addPurchaseList);else addPurchaseList();
+document.addEventListener('click',e=>{if(e.target.closest('[data-receive-po],[data-cancel-po]'))setTimeout(renderPurchaseList,50);});
+})();
