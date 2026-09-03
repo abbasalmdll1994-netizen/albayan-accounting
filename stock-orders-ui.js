@@ -1,96 +1,15 @@
 (() => {
-  'use strict';
-  const api = window.StockOrders;
-  let draft = new Map();
-  const statuses = {pending: 'بانتظار الاستلام', received: 'مستلمة', cancelled: 'ملغاة'};
-  const summary = item => `${money(Math.floor(item.quantity / item.packSize))} كارتون و${money(item.quantity % item.packSize)} قطعة`;
-  function rememberDraft() {
-    $('poSuggestions').querySelectorAll('[data-po-item]').forEach(row => {
-      draft.set(row.dataset.poItem, {checked: row.querySelector('[data-po-check]').checked,
-        quantity: row.querySelector('[data-po-quantity]').value});
-    });
-  }
-  window.renderStockOrders = () => {
-    rememberDraft();
-    const low = api.lowStock(state), needing = low.filter(row => row.suggestedCartons > 0);
-    $('stockAlert').hidden = low.length === 0;
-    $('stockAlertText').textContent = `${low.length} صنف وصل حد التنبيه أو نفد — ${needing.length} يحتاج طلب شراء.`;
-    $('poBadge').textContent = low.length ? ` (${low.length})` : '';
-    $('poSummary').textContent = low.length ? `${low.length} صنف قليل؛ ${low.length - needing.length} تغطيه طلبيات معلّقة.` : 'المخزون أعلى من حدود التنبيه المحددة.';
-    $('poSuggestions').innerHTML = low.map(({item, minCartons, orderedPieces, suggestedCartons}) => {
-      const previous = draft.get(item.id), covered = suggestedCartons === 0;
-      const checked = !covered && (previous ? previous.checked : false);
-      const quantity = covered ? 0 : previous?.quantity ?? suggestedCartons;
-      return `<div class="po-item" data-po-item="${esc(item.id)}"><strong>${esc(item.name)}</strong><input type="checkbox" data-po-check hidden ${checked ? 'checked' : ''}><div class="actions"><button type="button" data-accept-po aria-pressed="${checked}" class="${checked ? 'primary' : ''}" ${covered ? 'disabled' : ''}>${checked ? 'مقبول ✓' : 'قبول'}</button><button type="button" class="danger" data-reject-po="${esc(item.id)}">رفض</button></div>
-        <p>المتوفر: ${summary(item)} · حد التنبيه: ${money(minCartons)} كارتون</p>
-        ${orderedPieces ? `<p>بطلبية معلّقة: ${money(orderedPieces)} قطعة${covered ? ' — تغطي النقص' : ''}</p>` : ''}
-        <label>الكمية المطلوبة · كارتون<input type="number" data-po-quantity min="1" step="1" value="${esc(quantity)}" ${covered || !checked ? 'disabled' : ''}></label>
-        <p class="muted">${money(item.packSize)} قطعة بالكارتون · المقترح الآن: ${money(suggestedCartons)} كارتون</p></div>`;
-    }).join('') || '<p class="empty">لا توجد أصناف قليلة حالياً. تستطيع تعديل حد التنبيه من الأصناف والمخزون.</p>';
-    $('savePurchaseOrder').disabled = !needing.length || blocked;
-    $('poHistory').innerHTML = [...(state.purchaseOrders || [])].reverse().map(order => `<details class="po-item"><summary><strong>طلبية ${order.number} · ${esc(order.supplier)}</strong> — ${statuses[order.status]}</summary>
-      <p>${esc(order.date)}${order.note ? ' · ' + esc(order.note) : ''}</p>
-      ${order.lines.map(line => `<p>${esc(line.name)}: ${money(line.cartons)} كارتون × ${money(line.packSize)} قطعة</p>`).join('')}
-      ${order.status === 'received' ? `<p>استلام المخزون: ${esc(order.receivedDate)} · فاتورة / سند المورد: ${esc(order.receiptReference)}</p>` : ''}
-      ${order.status === 'pending' ? `<div class="actions"><button type="button" class="primary" data-receive-po="${esc(order.id)}">تأكيد استلام كامل الطلبية</button><button type="button" class="danger" data-cancel-po="${esc(order.id)}">إلغاء الطلبية</button></div>` : ''}</details>`).join('') || '<p class="empty">لا توجد طلبيات شراء محفوظة بعد.</p>';
-  };
-  $('poSuggestions').addEventListener('input', rememberDraft);
-  $('poSuggestions').addEventListener('click', event => {
-    const button = event.target.closest('button');
-    if (!button) return;
-    if (button.hasAttribute('data-accept-po')) {
-      const row = button.closest('[data-po-item]'), check = row.querySelector('[data-po-check]');
-      check.checked = !check.checked;
-      button.textContent = check.checked ? 'مقبول ✓' : 'قبول';
-      button.classList.toggle('primary', check.checked);
-      button.setAttribute('aria-pressed', String(check.checked));
-      row.querySelector('[data-po-quantity]').disabled = !check.checked;
-      rememberDraft();
-    }
-    if (button.dataset.rejectPo) {
-      const id = button.dataset.rejectPo;
-      if (commit({...state, items: state.items.map(item => item.id === id ? {...item, reorderEnabled: false} : item)})) {
-        draft.delete(id);
-        notify('تم رفض الصنف وإيقاف اقتراحه. تستطيع إعادته من تعديل الصنف في المخزون.');
-      }
-    }
-  });
-  $('poForm').addEventListener('submit', event => {
-    event.preventDefault();
-    try {
-      rememberDraft();
-      const lines = [];
-      $('poSuggestions').querySelectorAll('[data-po-item]').forEach(row => {
-        if (row.querySelector('[data-po-check]').checked) lines.push({itemId: row.dataset.poItem,
-          cartons: Number(row.querySelector('[data-po-quantity]').value)});
-      });
-      const next = api.create(state, {supplier: $('poSupplier').value, date: localDate(), note: $('poNote').value, lines}, uid());
-      if (commit(next)) {
-        $('poForm').reset(); draft.clear(); $('poSuggestions').innerHTML = ''; window.renderStockOrders();
-        notify('تم حفظ طلبية الشراء بانتظار الاستلام.');
-      }
-    } catch (error) { notify(error.message); }
-  });
-  $('poHistory').addEventListener('click', event => {
-    const button = event.target.closest('button');
-    if (!button) return;
-    try {
-      if (button.dataset.cancelPo && confirm('إلغاء طلبية الشراء؟ ستظهر الأصناف الناقصة مجدداً للطلب.')) {
-        if (commit(api.cancel(state, button.dataset.cancelPo))) {
-          draft.clear(); $('poSuggestions').innerHTML = ''; window.renderStockOrders(); notify('تم إلغاء الطلبية.');
-        }
-      }
-      if (button.dataset.receivePo) {
-        const reference = prompt('رقم فاتورة المورد أو سند التجهيز:');
-        if (reference === null) return;
-        if (!reference.trim()) throw Error('اكتب رقم فاتورة المورد أو سند التجهيز.');
-        if (!confirm('هل استلمت جميع الكميات بهذه الطلبية؟ التأكيد يضيفها إلى المخزون مرة واحدة.')) return;
-        if (commit(api.receive(state, button.dataset.receivePo, localDate(), reference))) {
-          draft.clear(); $('poSuggestions').innerHTML = ''; window.renderStockOrders(); notify('تم استلام الطلبية وإضافة الكميات للمخزون.');
-        }
-      }
-    } catch (error) { notify(error.message); }
-  });
-  window.renderStockOrders();
-  if (location.hash === '#purchaseOrders') go('purchaseOrders');
+'use strict';
+const api=window.StockOrders;let draft=new Map();const statuses={pending:'بانتظار الاستلام',received:'مستلمة',cancelled:'ملغاة'};
+function remember(){document.querySelectorAll('#poSuggestions [data-po-item]').forEach(r=>draft.set(r.dataset.poItem,{checked:r.querySelector('[data-po-check]').checked,quantity:r.querySelector('[data-po-quantity]').value}));}
+function manualBox(){let box=$('poManual');if(box)return box;box=document.createElement('div');box.id='poManual';box.className='panel';box.innerHTML='<h3>إضافة مادة أخرى للطلبية</h3><div class="grid"><label>المادة<select id="poManualItem"><option value="">اختر المادة</option></select></label><label>الكمية (كارتون)<input id="poManualQty" type="number" min="1" step="1" value="1"></label></div><div class="actions"><button type="button" id="poManualAdd">إضافة للطلبية</button></div><div id="poManualRows"></div>';$('poSuggestions').after(box);$('poManualAdd').onclick=()=>{const id=$('poManualItem').value,q=Number($('poManualQty').value);if(!id||!Number.isSafeInteger(q)||q<1){notify('اختر المادة واكتب عدد الكراتين.');return}draft.set(id,{checked:true,quantity:q,manual:true});window.renderStockOrders();};return box;}
+window.renderStockOrders=()=>{remember();const low=api.lowStock(state),needing=low.filter(r=>r.suggestedCartons>0);$('stockAlert').hidden=!low.length;$('stockAlertText').textContent=`${low.length} صنف وصل حد التنبيه أو نفد.`;$('poBadge').textContent=low.length?` (${low.length})`:'';$('poSummary').textContent=low.length?'المواد المطلوب إعادة شرائها':'لا توجد مواد تحتاج إعادة شراء حالياً.';
+$('poSuggestions').innerHTML=low.map(({item,suggestedCartons})=>{const p=draft.get(item.id),checked=!!p?.checked,q=p?.quantity??suggestedCartons;return `<div class="po-item" data-po-item="${esc(item.id)}"><input type="checkbox" data-po-check hidden ${checked?'checked':''}><div class="grid"><div><small>الرقم المخزني</small><strong>${esc(item.code)||'—'}</strong></div><div><small>اسم المادة</small><strong>${esc(item.name)}</strong></div><div><small>الرصيد الحالي</small><strong>${money(Math.floor(item.quantity/item.packSize))} كارتون</strong></div></div><div class="actions"><button type="button" data-accept-po class="${checked?'primary':''}">${checked?'مقبول ✓':'قبول ✓'}</button><button type="button" class="danger" data-reject-po="${esc(item.id)}">رفض ✕</button></div><label ${checked?'':'hidden'} data-qty-wrap>عدد الكراتين<input type="number" data-po-quantity min="1" step="1" value="${esc(q)}"></label></div>`}).join('')||'<p class="empty">لا توجد مواد قليلة حالياً.</p>';
+manualBox();$('poManualItem').innerHTML='<option value="">اختر المادة</option>'+state.items.map(i=>`<option value="${esc(i.id)}">${esc(i.code)||'—'} · ${esc(i.name)}</option>`).join('');const lowIds=new Set(low.map(r=>r.item.id));$('poManualRows').innerHTML=[...draft].filter(([id,v])=>v.checked&&!lowIds.has(id)).map(([id,v])=>{const i=state.items.find(x=>x.id===id);return i?`<div class="po-item"><strong>${esc(i.code)||'—'} · ${esc(i.name)}</strong><span>${esc(v.quantity)} كارتون</span><button type="button" data-remove-manual="${esc(id)}">حذف</button></div>`:''}).join('');$('savePurchaseOrder').disabled=blocked;
+$('poHistory').innerHTML=[...(state.purchaseOrders||[])].reverse().map(o=>`<details class="po-item"><summary><strong>طلبية ${o.number} · ${esc(o.supplier)}</strong> — ${statuses[o.status]}</summary><p>${esc(o.date)}${o.note?' · '+esc(o.note):''}</p>${o.lines.map(l=>`<p>${esc(l.code)||'—'} · ${esc(l.name)}: ${money(l.cartons)} كارتون</p>`).join('')}${o.status==='received'?`<p>استلام المخزون: ${esc(o.receivedDate)} · فاتورة / سند المورد: ${esc(o.receiptReference)}</p>`:''}${o.status==='pending'?`<div class="actions"><button type="button" class="primary" data-receive-po="${esc(o.id)}">تأكيد الاستلام</button><button type="button" class="danger" data-cancel-po="${esc(o.id)}">إلغاء الطلبية</button></div>`:''}</details>`).join('')||'<p class="empty">لا توجد طلبيات شراء محفوظة بعد.</p>';};
+$('poSuggestions').addEventListener('input',remember);$('poSuggestions').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-accept-po')){const r=b.closest('[data-po-item]'),c=r.querySelector('[data-po-check]');c.checked=!c.checked;r.querySelector('[data-qty-wrap]').hidden=!c.checked;b.textContent=c.checked?'مقبول ✓':'قبول ✓';b.classList.toggle('primary',c.checked);remember();}if(b.dataset.rejectPo&&commit({...state,items:state.items.map(i=>i.id===b.dataset.rejectPo?{...i,reorderEnabled:false}:i)})){draft.delete(b.dataset.rejectPo);notify('تم رفض المادة وإيقاف اقتراحها.');}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-remove-manual]');if(b){draft.delete(b.dataset.removeManual);window.renderStockOrders();}});
+$('poForm').addEventListener('submit',e=>{e.preventDefault();try{remember();const lines=[...draft].filter(([,v])=>v.checked).map(([itemId,v])=>({itemId,cartons:Number(v.quantity)}));const next=api.create(state,{supplier:$('poSupplier').value,date:localDate(),note:$('poNote').value,lines},uid());if(commit(next)){$('poForm').reset();draft.clear();window.renderStockOrders();notify('تم حفظ طلبية الشراء بانتظار الاستلام.');}}catch(err){notify(err.message)}});
+$('poHistory').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;try{if(b.dataset.cancelPo&&confirm('إلغاء طلبية الشراء؟')){if(commit(api.cancel(state,b.dataset.cancelPo))){draft.clear();window.renderStockOrders();notify('تم إلغاء الطلبية.');}}if(b.dataset.receivePo){const ref=prompt('رقم فاتورة المورد أو سند التجهيز:');if(ref===null)return;if(!ref.trim())throw Error('اكتب رقم فاتورة المورد أو سند التجهيز.');if(!confirm('هل استلمت جميع الكميات؟ التأكيد يضيفها للمخزون.'))return;if(commit(api.receive(state,b.dataset.receivePo,localDate(),ref))){draft.clear();window.renderStockOrders();notify('تم الاستلام وإضافة الكميات للمخزون.');}}}catch(err){notify(err.message)}});
+window.renderStockOrders();if(location.hash==='#purchaseOrders')go('purchaseOrders');
 })();
