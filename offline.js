@@ -10,7 +10,7 @@
   }
   function init() {
     loadScript('mobile-ui.js?v=release-20260904-2','data-mobile-ui');
-    loadScript('purchase-list-ui.js?v=release-20260904-1','data-purchase-list-ui');
+    loadScript('purchase-list-ui.js?v=release-20260904-2','data-purchase-list-ui');
     if (window.self !== window.top) return;
     const bar = document.createElement('div');
     bar.id = 'offlineStatus';
@@ -21,7 +21,7 @@
     const retry = document.createElement('button');
     retry.type = 'button'; retry.textContent = 'إعادة المحاولة'; retry.hidden = true;
     bar.append(label, retry); document.body.prepend(bar);
-    const style = document.createElement('style'); style.textContent = '@media print{#offlineStatus{display:none!important}}'; document.head.append(style);
+    const style = document.createElement('style'); style.textContent = '@media print{#offlineStatus{display:none!important}}'; document.head.appendChild(style);
     if (!('serviceWorker' in navigator) || !window.isSecureContext) {label.textContent = 'افتح البرنامج بمتصفح سامسونج أو Chrome لتجهيز العمل بدون إنترنت.';return;}
     let registration, failed = false;
     function render() {retry.hidden = !failed;if (navigator.serviceWorker.controller) {label.textContent = navigator.onLine ? 'جاهز للعمل بدون إنترنت · الحفظ على هذا الجهاز' : 'تعمل بدون إنترنت · الحفظ على هذا الجهاز؛ المزامنة تحتاج اتصالاً';if (registration?.waiting) label.textContent += ' · تحديث جاهز: احفظ شغلك وأغلق كل صفحات البرنامج ثم افتحه من جديد.';if (failed) label.textContent += ' · تعذّر تنزيل تحديث؛ النسخة الحالية باقية.';} else {label.textContent = failed ? 'لم يكتمل تجهيز العمل بدون إنترنت. اتصل بالإنترنت واضغط إعادة المحاولة.' : 'جارٍ تجهيز البرنامج للعمل بدون إنترنت… أبقِ الصفحة مفتوحة حتى يكتمل.';}}
