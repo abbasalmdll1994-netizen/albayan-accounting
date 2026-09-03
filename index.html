@@ -10,7 +10,12 @@
 
 .system-links{display:flex;flex-wrap:wrap;gap:10px;background:#fff;padding:12px 20px;border-bottom:1px solid var(--line)}.system-links a{display:inline-flex;align-items:center;min-height:46px;padding:9px 16px;border:1px solid var(--line);border-radius:9px;color:var(--navy);text-decoration:none}.system-links a:hover{background:#eaf2fa}.system-links a:focus-visible{outline:3px solid #e6a32a;outline-offset:2px}@media print{.system-links{display:none!important}}
 .po-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:12px;margin:18px 0}.po-item{padding:16px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:#fff}.po-item strong{font-size:17px}.po-item summary{cursor:pointer}.po-toggle{flex-direction:row;align-items:center;gap:10px}.po-toggle input{width:22px;min-height:22px}button:disabled{opacity:.55;cursor:default}
-</style></head><body>
+</style>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/qarya-192.png?v=1">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/qarya-180.png?v=1">
+<link rel="manifest" href="manifest.webmanifest?v=1">
+<meta name="application-name" content="مكتب القرية">
+</head><body>
 <header><div><h1>مكتب القرية</h1><p>واسط - السوق الكبير</p></div><div><b>برنامج البيان المحاسبي</b><p id="today"></p></div></header>
 <div class="system-links no-print" aria-label="أنظمة مكتب القرية"><a href="start.html?v=release-20260903-1">كل الأنظمة</a><a href="representative-dashboard.html?v=release-20260903-1">لوحة المندوب</a><a href="admin-dashboard.html?v=release-20260903-1">الإدارة والمحاسب</a></div>
 <nav aria-label="أقسام البرنامج"><button data-page="home" aria-current="page">الرئيسية</button><button data-page="accounts">حسابات الزبائن</button><button data-page="inventory">الأصناف والمخزون</button><button data-page="sales">فواتير البيع</button><button data-page="purchaseOrders">طلبية الشراء<span id="poBadge"></span></button><button data-page="backup">النسخ الاحتياطية</button></nav>

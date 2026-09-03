@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>مكتب القرية</title>
+  <rect width="512" height="512" fill="#123b63"/>
+  <rect x="98" y="222" width="316" height="182" rx="24" fill="#fff"/>
+  <path d="M117 133h278l29 88H88z" fill="#e6b75b"/>
+  <path d="M88 221h336v21c0 23-29 36-48 20-17 17-43 17-60 0-17 17-43 17-60 0-17 17-43 17-60 0-17 17-43 17-60 0-19 16-48 3-48-20z" fill="#e6b75b"/>
+  <rect x="127" y="295" width="120" height="76" rx="10" fill="#123b63"/>
+  <path d="M147 345l24-23 23 12 32-25" fill="none" stroke="#e6b75b" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="281" y="292" width="99" height="112" rx="10" fill="#123b63"/>
+  <path d="M299 348v20" stroke="#e6b75b" stroke-width="8" stroke-linecap="round"/>
+  <rect x="220" y="98" width="72" height="12" rx="6" fill="#e6b75b"/>
+</svg>
