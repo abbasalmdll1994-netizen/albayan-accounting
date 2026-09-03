@@ -135,4 +135,4 @@ window.addEventListener('afterprint',()=>document.body.classList.remove('printin
 $('saleTier').addEventListener('change',()=>chooseTier($('saleTier').value));
 $('saleCustomer').addEventListener('change',()=>{const saved=state.customerTiers.find(c=>c.name===$('saleCustomer').value.trim());if(saved)chooseTier(saved.tier)});
 $('today').textContent=new Intl.DateTimeFormat('ar-IQ',{dateStyle:'long'}).format(new Date());load();resetAccount();resetSale();render();
-</script></body></html>
+</script><script src="cloud-sync.js?v=1"></script></body></html>
