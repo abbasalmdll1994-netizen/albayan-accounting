@@ -9,7 +9,7 @@
     document.head.appendChild(script);
   }
   function init() {
-    loadScript('mobile-ui.js?v=release-20260904-3','data-mobile-ui');
+    loadScript('mobile-ui.js?v=release-20260904-4','data-mobile-ui');
     loadScript('purchase-list-ui.js?v=release-20260904-2','data-purchase-list-ui');
     if (window.self !== window.top) return;
     const bar = document.createElement('div');
