@@ -10,6 +10,7 @@
   }
   function init() {
     loadScript('mobile-ui.js?v=release-20260904-9','data-mobile-ui');
+    loadScript('sales-discount-fix.js?v=release-20260904-1','data-sales-discount-fix');
     loadScript('purchase-list-ui.js?v=release-20260904-2','data-purchase-list-ui');
     if (window.self !== window.top) return;
     const bar = document.createElement('div');
