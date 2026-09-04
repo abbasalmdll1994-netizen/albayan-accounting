@@ -13,7 +13,7 @@
     loadScript('sales-payment-ui.js?v=release-20260904-5','data-sales-payment-ui');
     loadScript('sales-balance-ui.js?v=release-20260904-3','data-sales-balance-ui');
     loadScript('sales-print-ui.js?v=release-20260904-2','data-sales-print-ui');
-    loadScript('customer-payment-ui.js?v=release-20260904-1','data-customer-payment-ui');
+    loadScript('customer-payment-ui.js?v=release-20260904-2','data-customer-payment-ui');
     loadScript('purchase-list-ui.js?v=release-20260904-2','data-purchase-list-ui');
     if (window.self !== window.top) return;
     const bar = document.createElement('div');
