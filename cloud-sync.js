@@ -26,3 +26,75 @@ const form=document.getElementById('cloudLogin');if(form){form.onsubmit=e=>{e.pr
 setInterval(()=>{if(session()&&meta().enabled&&navigator.onLine&&!document.hidden)upload().catch(()=>{});},15000);window.addEventListener('online',()=>{if(session()&&meta().enabled)upload().catch(()=>{});});}
 window.AlbayanCloud={upload,restore,payload,validate};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
+
+// Sales discount extension: keeps older invoices compatible and posts only the net amount to customer debt.
+(() => {
+'use strict';
+const form=document.getElementById('saleForm');
+if(!form||document.getElementById('saleDiscount'))return;
+const paid=document.getElementById('salePaid');
+const paidLabel=paid?.closest('label');
+if(!paidLabel)return;
+const discountLabel=document.createElement('label');
+discountLabel.innerHTML='الخصم · د.ع<input id="saleDiscount" type="number" min="0" step="0.01" value="0" required>';
+paidLabel.parentNode.insertBefore(discountLabel,paidLabel);
+const discount=document.getElementById('saleDiscount');
+
+const originalInvoiceTotal=invoiceTotal;
+invoiceTotal=function(v){
+ const gross=originalInvoiceTotal({...v,discount:0});
+ const d=Number(v?.discount||0);
+ return (cents(gross)-cents(d))/100;
+};
+
+const originalSaleTransaction=saleTransaction;
+saleTransaction=function(current,invoice,editId=null){
+ invoice.discount=Number(discount.value||0);
+ const gross=originalInvoiceTotal({...invoice,discount:0});
+ if(!amount(invoice.discount))throw Error('قيمة الخصم غير صالحة.');
+ if(cents(invoice.discount)>cents(gross))throw Error('الخصم لا يمكن أن يكون أكبر من مجموع الفاتورة.');
+ return originalSaleTransaction(current,invoice,editId);
+};
+
+updateSaleTotals=function(){
+ let gross=Number(document.getElementById('saleLoading').value)||0;
+ draftLines.forEach((l,n)=>{
+  const val=lineCents(l)/100;gross+=val;
+  const target=document.getElementById('lineTotal'+n);
+  if(target)target.textContent=`المبلغ الكلي: ${Number.isFinite(val)?money(val):'—'} د.ع · ${l.unit?money(l.quantity*(l.unit==='carton'?l.packSize:l.unit==='dozen'?12:1))+' قطعة من المخزون':'اختر وحدة البيع'}`;
+ });
+ gross=cents(gross)/100;
+ if(!Number.isFinite(gross)){document.getElementById('saleTotals').textContent='حدّد سعر الفئة ووحدة البيع وعدد القطع لكل صنف.';return NaN;}
+ const d=Number(discount.value)||0;
+ const net=Math.max(0,(cents(gross)-cents(d))/100);
+ const p=Number(document.getElementById('salePaid').value)||0;
+ document.getElementById('saleTotals').textContent=`قبل الخصم: ${money(gross)} د.ع · الخصم: ${money(d)} د.ع · المجموع الكلي: ${money(net)} د.ع · المتبقي: ${money((cents(net)-cents(p))/100)} د.ع`;
+ return net;
+};
+
+discount.addEventListener('input',updateSaleTotals);
+const originalResetSale=resetSale;
+resetSale=function(){originalResetSale();discount.value='0';updateSaleTotals();};
+
+const originalInvoiceHTML=invoiceHTML;
+invoiceHTML=function(v){
+ const d=Number(v?.discount||0);
+ let html=originalInvoiceHTML(v);
+ html=html.replace('<p class="grand"><span>المجموع الكلي</span>',`<p><span>الخصم</span><b>${money(d)}</b></p><p class="grand"><span>المجموع الكلي بعد الخصم</span>`);
+ return html;
+};
+
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button[data-edit-sale]');
+ if(!b)return;
+ const id=b.dataset.editSale;
+ setTimeout(()=>{
+  const v=state.invoices.find(x=>x.id===id);
+  if(v){discount.value=Number(v.discount||0);updateSaleTotals();}
+ },0);
+});
+
+// Existing invoices have no discount field; treating it as zero preserves their totals and printout.
+discount.value='0';
+updateSaleTotals();
+})();
