@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const page=(location.pathname.split('/').pop()||'').toLowerCase();
-const VER='fix-20260906-1';
+const VER='fix-20260906-2';
 function go(url){location.href=url+(url.includes('?')?'&':'?')+'v='+VER;}
 function bindDashboard(){
   document.addEventListener('click',e=>{
@@ -24,12 +24,28 @@ function activateRepresentativeSection(){
   if(!section)return;
   let tries=0;
   const open=()=>{
-    const b=document.querySelector('[data-section="'+CSS.escape(section)+'"]');
+    const b=Array.from(document.querySelectorAll('[data-section]')).find(x=>x.dataset.section===section);
     if(b){b.click();return;}
-    if(++tries<30)setTimeout(open,100);
+    if(++tries<40)setTimeout(open,100);
   };
   open();
 }
+function hardenVisitSale(){
+  let tries=0;
+  const install=()=>{
+    const btn=document.getElementById('visitSale');
+    if(!btn){if(++tries<80)setTimeout(install,150);return;}
+    if(btn.dataset.mobileSaleFix==='1')return;
+    btn.dataset.mobileSaleFix='1';
+    btn.addEventListener('click',()=>{
+      try{
+        const name=String(document.getElementById('visitName')?.textContent||'').trim();
+        if(name)sessionStorage.setItem('albayanRepSaleCustomer',name);
+      }catch(_){ }
+    },true);
+  };
+  install();
+}
 if(page==='representative-dashboard.html')bindDashboard();
-if(page==='representative.html')activateRepresentativeSection();
+if(page==='representative.html'){activateRepresentativeSection();hardenVisitSale();}
 })();
