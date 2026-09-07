@@ -1,5 +1,5 @@
 'use strict';
-const VERSION='offline-20260907-65';
+const VERSION='offline-20260907-66';
 const BASE=new URL('./',self.location.href),PREFIX='qarya-shell:'+BASE.pathname+':',CACHE=PREFIX+VERSION;
 const FILES=['index.html','start.html','cloud.html','representative.html','representative-dashboard.html','representative-sale.html','admin-dashboard.html','admin-control.html','representatives.html','cash-handover.html','rep-daily-close.html','route-order.html','purchases.html','purchase-order.html','purchase-list.html','stock-orders.js','stock-orders-ui.js','purchase-list-ui.js','purchase-order-design.js','print-scope-ui.js','mobile-ui.js','mobile-home-fix.js','sales-payment-ui.js','sales-balance-ui.js','sales-print-ui.js','customer-payment-ui.js','cash-ui.js','reports-ui.js','backup-extra-ui.js','sync-core.js','rep-safety.js','material-import.js','material-import-ui.js','rep-purchase-report.js','cloud-sync.js','offline.js','manifest.webmanifest','icons/qarya-wordmark-180.png','icons/qarya-wordmark-192.png','icons/qarya-wordmark-512.png','icons/qarya-wordmark-maskable-512.png'];
 const URLS=FILES.map(f=>new URL(f,BASE).href),ALLOWED=new Set(URLS);
