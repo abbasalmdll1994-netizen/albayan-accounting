@@ -72,3 +72,22 @@
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
+
+/* Compact account-style sales invoice presentation, 2026-09-07 */
+(function(){
+ if(typeof document==='undefined')return;
+ function installSales(){
+  const sales=document.getElementById('sales');if(!sales)return;
+  sales.classList.add('sales-account-list');
+  const h=sales.querySelector(':scope>h2');if(h)h.textContent='قائمة المبيعات';
+  const form=document.getElementById('saleForm');if(form){
+   const hint=document.getElementById('tierHint');if(hint)hint.classList.add('compact-tier-hint');
+  }
+  if(document.getElementById('salesAccountListStyle'))return;
+  const s=document.createElement('style');s.id='salesAccountListStyle';s.textContent=`
+  .sales-account-list>h2{color:#123b63;margin-bottom:12px}.sales-account-list>.panel:first-of-type{padding:14px;border-radius:12px}.sales-account-list #saleForm>.grid:first-child{grid-template-columns:2fr 1fr 1fr 1fr 1fr 1fr 2fr;gap:8px}.sales-account-list #saleForm>.grid:first-child label{font-size:12px;gap:3px}.sales-account-list #saleForm>.grid:first-child input,.sales-account-list #saleForm>.grid:first-child select{min-height:40px;padding:6px 8px;border-radius:6px}.sales-account-list #saleForm>p.muted{display:none}.sales-account-list .remember-tier{margin:7px 0;font-size:13px}.sales-account-list .compact-tier-hint{padding:7px 10px;margin:7px 0;font-size:12px;border-radius:6px}.sales-account-list #saleLines{border:1px solid #cbd8e5;border-radius:8px;overflow:hidden;background:#fff}.sales-account-list .sale-line{display:grid;grid-template-columns:minmax(220px,2.2fr) 105px 85px 90px 115px 105px 105px 70px;gap:0;padding:0;border-bottom:1px solid #d9e3ed;align-items:stretch}.sales-account-list .sale-line:last-child{border-bottom:0}.sales-account-list .sale-line label{font-size:11px;padding:5px;border-left:1px solid #e2e8ef;gap:2px}.sales-account-list .sale-line label:first-child{grid-column:auto}.sales-account-list .sale-line input,.sales-account-list .sale-line select{min-height:38px;padding:5px 6px;border-radius:4px;font-size:13px}.sales-account-list .sale-line button{margin:18px 4px 4px;min-height:38px;padding:4px 7px;border-radius:5px;color:#a12727}.sales-account-list .sale-line .line-total{grid-column:1/-1;margin:0;padding:4px 8px;background:#f7f9fb;font-size:12px;color:#42566a}.sales-account-list #addSaleLine{min-height:40px;padding:6px 14px}.sales-account-list #saleForm>.grid[style]{grid-template-columns:1fr 1fr;max-width:520px;margin-right:auto}.sales-account-list .sale-total{padding:9px 0;font-size:16px;font-weight:700;border-top:1px solid #d9e3ed;margin-top:8px}.sales-account-list #saleForm>.actions{margin-top:9px}.sales-account-list #saleForm>.actions button{min-height:42px}.sales-account-list>.panel:last-of-type{padding:14px}.sales-account-list>.panel:last-of-type td,.sales-account-list>.panel:last-of-type th{padding:9px 8px}
+  @media(max-width:750px){.sales-account-list>.panel:first-of-type{padding:9px}.sales-account-list #saleForm>.grid:first-child{grid-template-columns:1fr 1fr}.sales-account-list #saleForm>.grid:first-child label:first-child,.sales-account-list #saleForm>.grid:first-child label:last-child{grid-column:1/-1}.sales-account-list #saleLines{overflow-x:auto}.sales-account-list .sale-line{min-width:850px;grid-template-columns:220px 95px 80px 85px 110px 100px 100px 60px}.sales-account-list .sale-line label{padding:4px}.sales-account-list .sale-line input,.sales-account-list .sale-line select{min-height:36px;font-size:12px}.sales-account-list .sale-line button{min-height:36px;padding:3px;margin-top:17px}.sales-account-list #saleForm>.grid[style]{grid-template-columns:1fr 1fr;max-width:none}.sales-account-list .sale-total{font-size:14px}.sales-account-list>.panel:last-of-type{padding:9px}}
+  `;document.head.appendChild(s);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installSales);else installSales();
+})();
