@@ -1,0 +1,16 @@
+(()=>{'use strict';
+const URL_BASE='https://dqaooogkwjwiufnrrzpx.supabase.co';
+const API_KEY='sb_publishable_DSqelI68t-0TnwjSGDF_Pg_zZ0uqfZB';
+const SESSION='albayanCloudSessionV1';
+let running=false,timer=null;
+const readSession=()=>{try{return JSON.parse(sessionStorage.getItem(SESSION)||'null')}catch{return null}};
+const saveSession=s=>{if(!s)return null;s.expires_at=Date.now()+Number(s.expires_in||3600)*1000;sessionStorage.setItem(SESSION,JSON.stringify(s));return s};
+async function request(path,body,token){const c=new AbortController(),to=setTimeout(()=>c.abort(),20000);try{const r=await fetch(URL_BASE+path,{method:'POST',headers:{apikey:API_KEY,'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify(body),signal:c.signal});const raw=await r.text();let data=null;try{data=raw?JSON.parse(raw):null}catch{}if(!r.ok){const msg=data?.message||data?.error_description||data?.hint||raw||('HTTP '+r.status);const e=new Error(msg);e.status=r.status;throw e}return data}finally{clearTimeout(to)}}
+async function token(){let s=readSession();if(!s?.access_token)return null;if(Number(s.expires_at||0)>Date.now()+60000)return s.access_token;if(!s.refresh_token)return null;try{s=await request('/auth/v1/token?grant_type=refresh_token',{refresh_token:s.refresh_token});saveSession(s);return s.access_token}catch{return null}}
+function parentId(op){return op?.payload?.parentOrderId||op?.payload?.parentOperationId||null}
+function clientCreated(op){const v=op?.payload?.createdAt||op?.createdAt||null;if(!v)return null;const d=new Date(v);return Number.isNaN(d.getTime())?null:d.toISOString()}
+async function send(op,t){const rows=await request('/rest/v1/rpc/albayan_accept_operation',{p_operation_id:String(op.operationId),p_operation_type:String(op.type||'record'),p_record_id:String(op.recordId||op.operationId),p_parent_operation_id:parentId(op),p_payload:op.payload||{},p_client_created_at:clientCreated(op)},t);const row=Array.isArray(rows)?rows[0]:rows;if(!row)throw Error('لم يصل تأكيد المزامنة من الخادم');return row}
+async function syncPending(){if(running||!navigator.onLine||!window.AlbayanSync)return;r​​unning=true;try{const t=await token();if(!t)return;const ops=window.AlbayanSync.pendingQueue();for(const op of ops){try{window.AlbayanSync.markAttempt(op.operationId);const ack=await send(op,t);if(ack?.status==='review'||ack?.status==='rejected')window.AlbayanSync.markConflict(op.operationId,ack.status==='rejected'?'رفض الخادم العملية':'العملية تحتاج مراجعة');else window.AlbayanSync.markSynced(op.operationId,String(ack?.operation_id||op.operationId))}catch(e){window.AlbayanSync.markAttempt(op.operationId,e?.name==='AbortError'?'انتهت مهلة الاتصال':e?.message||'تعذر الاتصال');if(e?.status===401)break}}}finally{running=false}}
+function start(){clearInterval(timer);timer=setInterval(syncPending,15000);syncPending()}
+window.AlbayanCentralSync={syncPending};window.addEventListener('online',syncPending);window.addEventListener('storage',e=>{if(e.key==='albayanSyncQueueV1')syncPending()});document.readyState==='loading'?document.addEventListener('DOMContentLoaded',start):start();
+})();
