@@ -1,8 +1,7 @@
 (() => {
 'use strict';
 if (!/\/index\.html$/.test(location.pathname) && !location.pathname.endsWith('/albayan-accounting/')) return;
-function gross(){if(typeof draftLines==='undefined'||typeof lineCents!=='function'||typeof cents!=='function')return 0;return (draftLines.reduce((n,l)=>n+lineCents(l),0)+cents(Number(document.getElementById('saleLoading')?.value)||0))/100}
-function net(){return Math.max(0,(cents(gross())-cents(Number(document.getElementById('saleDiscount')?.value)||0))/100)}
+function net(){if(typeof draftLines==='undefined'||typeof lineCents!=='function'||typeof cents!=='function')return 0;const gross=draftLines.reduce((n,l)=>n+lineCents(l),0)/100,discount=Math.max(0,Number(document.getElementById('saleLoading')?.value)||0);return Math.max(0,(cents(gross)-cents(discount))/100)}
 function install(){
  const form=document.getElementById('saleForm'),paid=document.getElementById('salePaid'),due=document.getElementById('saleDue');
  if(!form||!paid||document.getElementById('salePaymentMethod'))return;
@@ -12,7 +11,7 @@ function install(){
  const method=label.querySelector('select');
  function apply(){const total=net();if(method.value==='cash'){paid.value=String(total);if(due)due.value=''}else if(method.value==='credit')paid.value='0';paid.readOnly=method.value!=='partial';if(due){due.required=method.value!=='cash';due.disabled=method.value==='cash';due.closest('label')?.classList.toggle('payment-due-required',method.value!=='cash')}if(typeof updateSaleTotals==='function')updateSaleTotals()}
  method.addEventListener('change',apply);
- document.addEventListener('input',e=>{if(method.value==='cash'&&(e.target?.id==='saleLoading'||e.target?.id==='saleDiscount'))apply()});
+ document.addEventListener('input',e=>{if(method.value==='cash'&&e.target?.id==='saleLoading')apply()});
  const lines=document.getElementById('saleLines');
  lines?.addEventListener('change',()=>setTimeout(()=>{if(method.value==='cash')apply()},0));
  lines?.addEventListener('input',()=>setTimeout(()=>{if(method.value==='cash')apply()},0));
